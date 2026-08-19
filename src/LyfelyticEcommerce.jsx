@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart, LogOut, Plus, Trash2, Menu, X, Package, Home, Upload } from 'lucide-react';
+import { supabase } from './supabaseClient';
 
 const styles = `
   * {
@@ -748,24 +749,31 @@ const styles = `
 `;
 
 export default function LyfelyticEcommerce() {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Wireless Earbuds',
-      price: 2499,
-      description: 'High-quality wireless earbuds with noise cancellation',
-      image: 'https://via.placeholder.com/300x300?text=Wireless+Earbuds',
-      stock: 15
-    },
-    {
-      id: 2,
-      name: 'Phone Stand',
-      price: 599,
-      description: 'Adjustable phone stand for all devices',
-      image: 'https://via.placeholder.com/300x300?text=Phone+Stand',
-      stock: 25
+  // Products now live in Supabase, not local state/localStorage.
+  // This starts empty and gets filled in by fetchProducts() below.
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from Supabase
+  const fetchProducts = async () => {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) {
+      console.error('Failed to fetch products:', error);
+      alert('❌ Could not load products. Check your internet connection.');
+    } else {
+      setProducts(data);
     }
-  ]);
+    setLoading(false);
+  };
+
+  // Load products once when the app first mounts
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const [cart, setCart] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -800,19 +808,31 @@ export default function LyfelyticEcommerce() {
     }
   };
 
-  // Add Product (Admin)
-  const handleAddProduct = (e) => {
+  // Add Product (Admin) - writes to Supabase so every visitor sees it
+  const handleAddProduct = async (e) => {
     e.preventDefault();
     if (newProduct.name && newProduct.price && newProduct.image && newProduct.stock) {
-      setProducts([
-        ...products,
-        {
-          id: Date.now(),
-          ...newProduct,
-          price: parseFloat(newProduct.price),
-          stock: parseInt(newProduct.stock)
-        }
-      ]);
+      const { data, error } = await supabase
+        .from('products')
+        .insert([
+          {
+            id: Date.now(),
+            name: newProduct.name,
+            price: parseFloat(newProduct.price),
+            description: newProduct.description,
+            image: newProduct.image,
+            stock: parseInt(newProduct.stock)
+          }
+        ])
+        .select();
+
+      if (error) {
+        console.error('Failed to add product:', error);
+        alert('❌ Failed to add product. Please try again.');
+        return;
+      }
+
+      setProducts([...products, ...data]);
       setNewProduct({ name: '', price: '', description: '', image: '', stock: '' });
       alert('✅ Product added successfully!');
     } else {
@@ -820,9 +840,20 @@ export default function LyfelyticEcommerce() {
     }
   };
 
-  // Delete Product (Admin)
-  const handleDeleteProduct = (id) => {
+  // Delete Product (Admin) - removes from Supabase so every visitor sees it
+  const handleDeleteProduct = async (id) => {
     if (confirm('Are you sure you want to delete this product?')) {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Failed to delete product:', error);
+        alert('❌ Failed to delete product. Please try again.');
+        return;
+      }
+
       setProducts(products.filter(p => p.id !== id));
       alert('✅ Product deleted successfully!');
     }
@@ -953,6 +984,7 @@ export default function LyfelyticEcommerce() {
             <div className="products-container">
               {/* Products Grid */}
               <div>
+                {loading && <p style={{ textAlign: 'center', padding: '20px' }}>Loading products...</p>}
                 <div className="products-grid">
                   {products.map(product => (
                     <div key={product.id} className="product-card">

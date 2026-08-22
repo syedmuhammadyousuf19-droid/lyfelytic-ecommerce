@@ -370,12 +370,12 @@ const styles = `
   }
   .product-page-back:hover { background: #f5f1ed; }
 
-  .gallery-wrapper { background: #f5f1ed; position: relative; overflow: hidden; }
+  .gallery-wrapper { background: #f5f1ed; position: relative; overflow: hidden; width: 100%; }
   .gallery-main { position: relative; width: 100%; height: 300px; overflow: hidden; touch-action: pan-y; }
   @media (min-width: 768px) { .gallery-main { height: 420px; } }
-  .gallery-slides { display: flex; height: 100%; transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94); }
-  .gallery-slide { min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; flex-shrink: 0; }
-  .gallery-slide img { width: 100%; height: 100%; object-fit: contain; padding: 16px; }
+  .gallery-slides { display: flex; height: 100%; width: 100%; transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .gallery-slide { min-width: 100%; max-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; flex-shrink: 0; overflow: hidden; }
+  .gallery-slide img { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; padding: 16px; box-sizing: border-box; display: block; }
   
   .gallery-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
@@ -399,7 +399,7 @@ const styles = `
   .gallery-thumb { flex-shrink: 0; width: 60px; height: 60px; border-radius: 8px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; background: #f5f1ed; }
   .gallery-thumb:hover { border-color: var(--accent2); }
   .gallery-thumb.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-  .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .product-details-card { background: var(--bg2); margin-top: 8px; padding: 18px 16px; }
   .product-page-price { font-size: 28px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
@@ -533,7 +533,7 @@ const styles = `
   .product-management-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; transition: all 0.2s; }
   .product-management-card:hover { border-color: rgba(124,106,247,0.3); }
   .product-management-image { width: 100%; height: 110px; background: var(--bg3); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
-  .product-management-image img { width: 100%; height: 100%; object-fit: cover; }
+  .product-management-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .product-management-img-count { font-size: 11px; color: var(--text-lt); margin-bottom: 5px; }
   .admin-card-actions { display: flex; gap: 8px; margin-top: 10px; }
   .edit-btn {
@@ -653,11 +653,62 @@ function ProductPage({ product, onBack, onAddToCart, allProducts }) {
         <ArrowLeft size={20} /> Back to Shop
       </button>
 
-      <div className="gallery-wrapper">
-        <div className="gallery-main" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-          <div className="gallery-slides" style={{ transform: `translateX(-${current * 100}%)` }}>
+      {/*
+        FIX: the image gallery below now carries inline fallback styles
+        (in addition to the CSS classes) on the wrapper, slide track,
+        individual slides, and the <img> itself. This guarantees the
+        gallery is always height-constrained and clipped even on the
+        first paint, before the external <style> block has finished
+        loading/applying — which is what was causing the oversized
+        image to blow past its box and overlap the page on some
+        devices/connections.
+      */}
+      <div className="gallery-wrapper" style={{ position: 'relative', overflow: 'hidden', width: '100%' }}>
+        <div
+          className="gallery-main"
+          style={{ position: 'relative', width: '100%', height: 300, overflow: 'hidden' }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            className="gallery-slides"
+            style={{
+              display: 'flex',
+              height: '100%',
+              width: '100%',
+              transform: `translateX(-${current * 100}%)`
+            }}
+          >
             {images.map((img, i) => (
-              <div className="gallery-slide" key={i}><img src={img} alt={`${product.name} ${i + 1}`} /></div>
+              <div
+                className="gallery-slide"
+                key={i}
+                style={{
+                  minWidth: '100%',
+                  maxWidth: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  overflow: 'hidden',
+                  background: '#fff'
+                }}
+              >
+                <img
+                  src={img}
+                  alt={`${product.name} ${i + 1}`}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
             ))}
           </div>
           <button className={`gallery-arrow gallery-arrow-left ${current === 0 ? 'gallery-arrow-hidden' : ''}`} onClick={() => goTo(current - 1)}><ChevronLeft size={20} /></button>
@@ -672,7 +723,7 @@ function ProductPage({ product, onBack, onAddToCart, allProducts }) {
           <div className="gallery-dots">{images.map((_, i) => <button key={i} className={`gallery-dot ${i === current ? 'active' : ''}`} onClick={() => goTo(i)} />)}</div>
         )}
         {images.length > 1 && (
-          <div className="gallery-thumbs">{images.map((img, i) => <div key={i} className={`gallery-thumb ${i === current ? 'active' : ''}`} onClick={() => goTo(i)}><img src={img} alt="" /></div>)}</div>
+          <div className="gallery-thumbs">{images.map((img, i) => <div key={i} className={`gallery-thumb ${i === current ? 'active' : ''}`} onClick={() => goTo(i)}><img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} /></div>)}</div>
         )}
       </div>
 

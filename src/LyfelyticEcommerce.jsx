@@ -182,7 +182,7 @@ const styles = `
   @media (max-width: 1024px) { .products-container { grid-template-columns: 1fr; } }
   .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   @media (max-width: 768px) { 
-    .products-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; scroll-behavior: smooth; padding-right: 16px; margin-right: -16px; }
+    .products-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; scroll-behavior: smooth; padding-right: 16px; margin-right: -16px; -webkit-overflow-scrolling: touch; }
     .products-grid::-webkit-scrollbar { display: none; }
     .products-grid { scrollbar-width: none; -ms-overflow-style: none; }
   }
@@ -191,6 +191,7 @@ const styles = `
   .scroll-section {
     display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; padding-right: 16px; margin-right: -16px;
     scroll-behavior: smooth; overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -201,12 +202,14 @@ const styles = `
     border: 1px solid var(--border); transition: all 0.3s; cursor: pointer;
     position: relative; flex-shrink: 0;
   }
-  @media (max-width: 768px) { .product-card { min-width: 160px; } }
+  @media (max-width: 768px) {
+    .product-card { width: 160px; max-width: 160px; flex: 0 0 160px; }
+  }
   .product-card:hover { transform: translateY(-4px); border-color: var(--accent2); box-shadow: 0 8px 20px var(--shadow); }
 
   .product-image { width: 100%; height: 200px; background: var(--bg3); overflow: hidden; position: relative; }
   @media (max-width: 768px) { .product-image { height: 160px; } }
-  .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; display: block; }
   .product-card:hover .product-image img { transform: scale(1.04); }
 
   .out-of-stock {
@@ -248,7 +251,7 @@ const styles = `
     text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;
   }
   .product-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
-  .product-description { color: var(--text-md); font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
+  .product-description { color: var(--text-md); font-size: 12px; margin-bottom: 8px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   .product-price { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
   .product-stock { color: var(--text-lt); font-size: 11px; margin-bottom: 10px; font-weight: 500; }
 
@@ -371,7 +374,7 @@ const styles = `
   .gallery-main { position: relative; width: 100%; height: 300px; overflow: hidden; touch-action: pan-y; }
   @media (min-width: 768px) { .gallery-main { height: 420px; } }
   .gallery-slides { display: flex; height: 100%; transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94); }
-  .gallery-slide { min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; }
+  .gallery-slide { min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: white; flex-shrink: 0; }
   .gallery-slide img { width: 100%; height: 100%; object-fit: contain; padding: 16px; }
   
   .gallery-arrow {
@@ -391,7 +394,7 @@ const styles = `
   .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: #e0d8cc; border: none; cursor: pointer; transition: all 0.25s; padding: 0; }
   .gallery-dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
   
-  .gallery-thumbs { display: flex; gap: 8px; padding: 12px 16px; background: white; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+  .gallery-thumbs { display: flex; gap: 8px; padding: 12px 16px; background: white; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .gallery-thumbs::-webkit-scrollbar { display: none; }
   .gallery-thumb { flex-shrink: 0; width: 60px; height: 60px; border-radius: 8px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; background: #f5f1ed; }
   .gallery-thumb:hover { border-color: var(--accent2); }
@@ -418,6 +421,7 @@ const styles = `
     width: 100%; max-width: 680px;
     background: rgba(15,15,26,0.95); backdrop-filter: blur(20px);
     border-top: 1px solid var(--border); padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
     display: flex; gap: 10px; z-index: 200;
   }
   .btn-whatsapp {
@@ -452,12 +456,12 @@ const styles = `
   /* ── RELATED PRODUCTS ── */
   .related-section { background: var(--bg2); margin-top: 8px; padding: 18px 16px; }
   .related-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
-  .related-grid { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+  .related-grid { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
   .related-grid::-webkit-scrollbar { height: 3px; }
   .related-grid::-webkit-scrollbar-thumb { background: var(--text-lt); border-radius: 2px; }
-  .related-card { flex-shrink: 0; width: 130px; background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .related-card { flex-shrink: 0; width: 130px; max-width: 130px; flex: 0 0 130px; background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
   .related-card:hover { border-color: rgba(124,106,247,0.4); transform: translateY(-2px); }
-  .related-img { width: 100%; height: 90px; object-fit: cover; background: var(--bg3); }
+  .related-img { width: 100%; height: 90px; object-fit: cover; background: var(--bg3); display: block; }
   .related-info { padding: 8px; }
   .related-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
   .related-price { font-size: 12px; color: var(--accent); font-weight: 700; }

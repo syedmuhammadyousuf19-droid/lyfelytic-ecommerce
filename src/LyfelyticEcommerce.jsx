@@ -13,8 +13,9 @@ const CATEGORIES = ['All', 'General', 'Kitchen', 'Bedroom', 'Bathroom', 'Office'
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body, #root { height: 100%; }
-  body { font-family: 'Manrope', sans-serif; }
+  html, body, #root { height: 100%; width: 100%; overflow-x: hidden; }
+  body { font-family: 'Manrope', sans-serif; background: #050608; color: var(--ink); }
+  
   :root {
     --bg: #050608;
     --bg2: #080b10;
@@ -37,29 +38,47 @@ const styles = `
     --mx: 50vw;
     --my: 35vh;
   }
+  
   html { scroll-behavior: smooth; background: #050608; }
-  body { background: #050608; color: var(--ink); overflow-x: hidden; }
   button, input, select, textarea { font-family: 'Manrope', sans-serif; }
-  .lyfelytic-container { min-height: 100vh; background: #050608; position: relative; isolation: isolate; }
+  
+  .lyfelytic-container { 
+    min-height: 100vh; 
+    width: 100%; 
+    max-width: 100vw; 
+    overflow-x: hidden; 
+    background: #050608; 
+    position: relative; 
+    isolation: isolate; 
+  }
+  
   .lyfelytic-container::after {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999;
     background: radial-gradient(320px circle at var(--mx) var(--my), rgba(25,191,255,0.075), transparent 70%);
     mix-blend-mode: screen; opacity: .8;
   }
+  
   .lyfelytic-header {
-    background: rgba(4,6,9,.78); border-bottom: 1px solid rgba(255,255,255,.075);
-    backdrop-filter: blur(22px); padding: 16px 28px; position: sticky; top: 0; z-index: 200;
+    background: rgba(4,6,9,.85); border-bottom: 1px solid rgba(255,255,255,.075);
+    backdrop-filter: blur(22px); padding: 14px 20px; position: sticky; top: 0; z-index: 200; width: 100%;
   }
-  .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; min-height: 38px; }
-  .brand { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; pointer-events: none; }
-  .brand svg { display: none; }
+  
+  .header-content { 
+    max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; 
+    align-items: center; position: relative; min-height: 38px; width: 100%; 
+  }
+  
+  .brand { display: flex; align-items: center; gap: 10px; z-index: 2; }
+  .brand svg { color: var(--teal); }
   .brand h1 {
-    font-family: 'Space Grotesk', sans-serif; font-size: 24px; letter-spacing: .12em; text-transform: uppercase;
+    font-family: 'Space Grotesk', sans-serif; font-size: 20px; letter-spacing: .12em; text-transform: uppercase;
     background: linear-gradient(180deg,#fff,#8bdfff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .brand p { display: none !important; }
-  .nav-buttons { margin-left: auto; display: none; gap: 6px; align-items: center; }
-  @media (min-width: 900px) { .nav-buttons { display: flex; } }
+  .brand p { display: none; }
+  
+  .nav-buttons { display: none; gap: 6px; align-items: center; }
+  @media (min-width: 850px) { .nav-buttons { display: flex; } }
+  
   .nav-btn {
     background: transparent; border: 0; color: #aab5c4; border-radius: 999px;
     font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 9px 13px;
@@ -72,23 +91,28 @@ const styles = `
   .nav-btn-exit { color: #ff5e75; border: 1px solid rgba(255,94,117,0.28); }
   .nav-btn-cart { color: #061019; background: #fff; border: 0; box-shadow: 0 0 24px rgba(42,201,255,.18); position: relative; }
   .nav-btn-cart:hover { background: #bdefff; color: #061019; transform: translateY(-1px); }
+  
   .cart-badge {
     position: absolute; top: -6px; right: -6px; background: #06101a; color: #fff;
     border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center;
     justify-content: center; font-size: 10px; font-weight: 700;
   }
-  .mobile-menu-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; }
-  @media (min-width: 900px) { .mobile-menu-btn { display: none; } }
+  
+  .mobile-menu-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+  @media (min-width: 850px) { .mobile-menu-btn { display: none; } }
+  
   .mobile-menu {
-    display: none; position: absolute; top: 65px; left: 0; right: 0;
-    background: rgba(5,7,11,.96); backdrop-filter: blur(20px); flex-direction: column; gap: 8px;
-    padding: 12px; border-bottom: 1px solid rgba(255,255,255,.08);
+    display: none; position: absolute; top: 60px; left: 0; right: 0;
+    background: rgba(5,7,11,.98); backdrop-filter: blur(20px); flex-direction: column; gap: 8px;
+    padding: 14px; border-bottom: 1px solid rgba(255,255,255,.08); z-index: 199;
   }
   .mobile-menu.open { display: flex; }
-  @media (min-width: 900px) { .mobile-menu { display: none !important; } }
+  @media (min-width: 850px) { .mobile-menu { display: none !important; } }
+  
   .mobile-menu-btn-item {
     padding: 12px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.09);
-    color: #dce5f0; border-radius: 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;
+    color: #dce5f0; border-radius: 12px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;
+    font-size: 14px; width: 100%;
   }
 
   /* Hero */
@@ -97,7 +121,7 @@ const styles = `
     background: radial-gradient(650px 520px at 76% 50%, rgba(0,150,255,.22), transparent 64%),
                 radial-gradient(430px 300px at 18% 25%, rgba(0,78,150,.12), transparent 70%),
                 linear-gradient(180deg,#06080c,#050608);
-    position: relative; overflow: hidden; display: flex; align-items: center;
+    position: relative; overflow: hidden; display: flex; align-items: center; width: 100%;
   }
   .hero-cinematic::before {
     content: ''; position: absolute; inset: 0;
@@ -108,7 +132,7 @@ const styles = `
   .hero-cinematic-inner { max-width: 1400px; width: 100%; display: grid; grid-template-columns: .9fr 1.1fr; gap: 20px; z-index: 2; margin: 0 auto; align-items: center; }
   .hero-copy { max-width: 620px; }
   .hero-eyebrow { color: #54d8ff; font-size: 11px; letter-spacing: 2px; font-family: 'Space Grotesk', monospace; font-weight: 700; text-transform: uppercase; }
-  .hero-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(48px,6.2vw,88px); line-height: .98; letter-spacing: -.055em; color: #f8fbff; margin: 18px 0 24px; text-wrap: balance; }
+  .hero-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(40px,6.2vw,88px); line-height: .98; letter-spacing: -.055em; color: #f8fbff; margin: 18px 0 24px; text-wrap: balance; }
   .hero-accent { color: transparent; background: linear-gradient(100deg,#fff,#67dcff 45%,#278fff); -webkit-background-clip: text; background-clip: text; }
   .hero-sub { color: #8c9aac; max-width: 510px; font-size: 15px; line-height: 1.75; margin: 0 0 30px; }
   .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px; }
@@ -116,7 +140,7 @@ const styles = `
   .hero-primary-btn:hover { background: #dff7ff; box-shadow: 0 16px 46px rgba(28,192,255,.22); transform: translateY(-2px); }
   .hero-trust { color: #6e7c8e; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; }
   .hero-trust-dot, .hero-live-dot { width: 7px; height: 7px; border-radius: 50%; background: #2bceff; box-shadow: 0 0 14px #2bceff; display: inline-block; }
-  .hero-reference-stage { min-height: 530px; position: relative; display: flex; align-items: center; justify-content: center; isolation: isolate; }
+  .hero-reference-stage { min-height: 530px; position: relative; display: flex; align-items: center; justify-content: center; isolation: isolate; width: 100%; }
   .hero-stage-glow { position: absolute; width: 520px; height: 360px; border-radius: 50%; background: radial-gradient(ellipse,rgba(20,190,255,.34),rgba(32,85,255,.09) 42%,transparent 72%); filter: blur(18px); }
   .hero-stage-orbit { position: absolute; border-radius: 50%; border: 1px solid rgba(68,211,255,.15); transform: rotate(-18deg); }
   .hero-stage-orbit-one { width: 470px; height: 260px; }
@@ -131,33 +155,31 @@ const styles = `
   .hero-stage-caption { position: absolute; right: 2%; bottom: 3%; z-index: 10; padding: 11px 14px; border-left: 2px solid #2bc9ff; background: rgba(4,7,11,.65); backdrop-filter: blur(12px); display: grid; grid-template-columns: auto 1fr; column-gap: 8px; box-shadow: 0 15px 40px rgba(0,0,0,.35); }
   .hero-stage-caption strong { font-size: 12px; color: #edf7ff; }
   .hero-stage-caption small { grid-column: 2; color: #718095; font-size: 10px; margin-top: 2px; }
-  .hero-scroll-hint { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); color: #617085; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; z-index: 2; }
-  .hero-scroll-hint span { width: 28px; height: 1px; background: linear-gradient(90deg,transparent,#38cfff); }
 
   /* Category showcase */
-  .category-showcase { max-width: 1400px; margin: 0 auto; padding: 82px 5vw 70px; background: #050608; }
+  .category-showcase { max-width: 1400px; margin: 0 auto; padding: 82px 5vw 70px; background: #050608; width: 100%; }
   .category-showcase-head { display: block; text-align: center; margin-bottom: 32px; }
   .section-kicker { color: #53d5ff; font-size: 10px; font-weight: 800; letter-spacing: 2.2px; text-transform: uppercase; }
-  .category-showcase-head h2, .section-title h2 { font-family: 'Space Grotesk', sans-serif; color: #f3f7fc; font-size: clamp(30px,4vw,48px); letter-spacing: -.04em; margin-top: 7px; }
+  .category-showcase-head h2, .section-title h2 { font-family: 'Space Grotesk', sans-serif; color: #f3f7fc; font-size: clamp(26px,4vw,48px); letter-spacing: -.04em; margin-top: 7px; }
   .category-showcase-head p { margin: 10px auto 0; color: #69778a; max-width: 340px; font-size: 13px; line-height: 1.6; }
   .category-showcase-grid { display: grid; grid-template-columns: repeat(4,1fr); grid-auto-rows: 330px; gap: 10px; }
-  .category-showcase-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.08); border-radius: 2px; background: #0a0f15; cursor: pointer; text-align: left; min-width: 0; }
+  .category-showcase-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.08); border-radius: 4px; background: #0a0f15; cursor: pointer; text-align: left; min-width: 0; }
   .category-showcase-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .58; transform: scale(1.02); transition: transform .8s cubic-bezier(.2,.8,.2,1), filter .6s; filter: brightness(.68) saturate(1.15); }
   .category-showcase-card:hover img { transform: scale(1.12); filter: brightness(.9) saturate(1.25); }
   .category-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.82)); }
   .category-card-content { position: absolute; left: 22px; right: 22px; bottom: 20px; display: grid; grid-template-columns: 1fr auto; align-items: end; z-index: 2; }
   .category-card-content small { grid-column: 1/-1; color: #48d4ff; font-size: 9px; letter-spacing: 2px; margin-bottom: 6px; }
-  .category-card-content strong { color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 24px; letter-spacing: -.03em; }
+  .category-card-content strong { color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 22px; letter-spacing: -.03em; }
   .category-card-content em { display: flex; align-items: center; gap: 3px; color: #a9b7c7; font-style: normal; font-size: 10px; opacity: 0; transform: translateX(-5px); transition: .3s; }
   .category-showcase-card:hover .category-card-content em { opacity: 1; transform: translateX(0); }
 
   /* Search + Filters */
-  .search-bar-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 5vw 10px; background: #050608; }
-  .search-bar { display: flex; align-items: center; gap: 10px; background: #090d12; border: 1px solid rgba(255,255,255,.08); border-radius: 999px; padding: 12px 18px; }
+  .search-bar-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 5vw 10px; background: #050608; width: 100%; }
+  .search-bar { display: flex; align-items: center; gap: 10px; background: #090d12; border: 1px solid rgba(255,255,255,.08); border-radius: 999px; padding: 12px 18px; width: 100%; }
   .search-bar:focus-within { border-color: rgba(35,199,255,.45); box-shadow: 0 0 0 3px rgba(35,199,255,.07), 0 0 35px rgba(35,199,255,.06); }
-  .search-bar input { flex: 1; background: none; border: none; outline: none; color: #eaf4ff; font-size: 14px; }
+  .search-bar input { flex: 1; background: none; border: none; outline: none; color: #eaf4ff; font-size: 14px; min-width: 0; }
   .search-bar input::placeholder { color: #5d6b7f; }
-  .filter-bar { max-width: 1400px; margin: 0 auto; padding: 10px 5vw 20px; background: #050608; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .filter-bar { max-width: 1400px; margin: 0 auto; padding: 10px 5vw 20px; background: #050608; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between; width: 100%; }
   .category-chips { display: flex; gap: 7px; flex-wrap: wrap; flex: 1; overflow-x: auto; scrollbar-width: none; }
   .category-chips::-webkit-scrollbar { display: none; }
   .chip { padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,.08); background: transparent; color: #718095; white-space: nowrap; flex-shrink: 0; }
@@ -166,166 +188,105 @@ const styles = `
   .filter-select { padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #090d12; border: 1px solid rgba(255,255,255,.08); color: #aeb9c8; cursor: pointer; outline: none; }
 
   /* Product Catalog */
-  .main-content { max-width: 1400px; margin: 0 auto; padding: 50px 28px 90px; background: #050608; }
+  .main-content { max-width: 1400px; margin: 0 auto; padding: 40px 5vw 80px; background: #050608; width: 100%; }
   .section-title { text-align: center; margin-bottom: 24px; }
-  .products-section-title { display: flex; justify-content: space-between; align-items: end; padding-top: 70px; text-align: left; }
+  .products-section-title { display: flex; justify-content: space-between; align-items: end; padding-top: 50px; text-align: left; }
   .products-section-title p { color: #69778a; }
-  .products-container { display: grid; grid-template-columns: 1fr; gap: 18px; }
-  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .product-card { background: #090e14; border: 1px solid rgba(255,255,255,.075); border-radius: 3px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; position: relative; }
-  .product-card:hover { border-color: rgba(39,200,255,.35); transform: translateY(-7px); box-shadow: 0 25px 55px rgba(0,0,0,.55), 0 0 30px rgba(25,178,255,.07); }
-  .product-image { width: 100%; height: 280px; background: #070b10; overflow: hidden; position: relative; }
-  .product-image img { width: 100%; height: 100%; object-fit: contain; padding: 16px; transition: transform .7s cubic-bezier(.2,.8,.2,1), filter .5s; display: block; }
-  .product-card:hover .product-image img { transform: scale(1.08); filter: brightness(1.08); }
+  .products-container { display: grid; grid-template-columns: 1fr; gap: 18px; width: 100%; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; width: 100%; }
+  .product-card { background: #090e14; border: 1px solid rgba(255,255,255,.075); border-radius: 6px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; position: relative; }
+  .product-card:hover { border-color: rgba(39,200,255,.35); transform: translateY(-4px); box-shadow: 0 20px 45px rgba(0,0,0,.55), 0 0 25px rgba(25,178,255,.07); }
+  .product-image { width: 100%; height: 240px; background: #070b10; overflow: hidden; position: relative; }
+  .product-image img { width: 100%; height: 100%; object-fit: contain; padding: 14px; transition: transform .6s cubic-bezier(.2,.8,.2,1), filter .4s; display: block; }
+  .product-card:hover .product-image img { transform: scale(1.06); filter: brightness(1.08); }
   .out-of-stock { position: absolute; inset: 0; background: rgba(18,24,21,0.75); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
-  .stock-low-badge { position: absolute; top: 10px; left: 10px; background: #ee4770; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: 'Space Grotesk', monospace; text-transform: uppercase; }
-  .wishlist-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; z-index: 5; }
+  .stock-low-badge { position: absolute; top: 10px; left: 10px; background: #ee4770; color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; font-family: 'Space Grotesk', monospace; text-transform: uppercase; }
+  .wishlist-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; z-index: 5; }
   .wishlist-btn:hover { background: rgba(30,194,255,.20); border-color: #36cfff; }
   .wishlist-btn.active { background: #19bfff; border-color: #19bfff; }
-  .multi-img-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(4,8,14,.72); border: 1px solid rgba(255,255,255,.08); color: white; border-radius: 12px; padding: 4px 10px; font-size: 11px; font-family: 'Space Grotesk', monospace; }
-  .product-info { padding: 17px; background: #090e14; }
-  .product-category-tag { font-size: 9px; font-weight: 700; color: #43cfff; font-family: 'Space Grotesk', monospace; text-transform: uppercase; margin-bottom: 6px; }
-  .product-name { font-size: 16px; font-weight: 700; color: #eef4fb; margin-bottom: 4px; font-family: 'Space Grotesk', sans-serif; }
+  .multi-img-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(4,8,14,.72); border: 1px solid rgba(255,255,255,.08); color: white; border-radius: 10px; padding: 3px 8px; font-size: 10px; font-family: 'Space Grotesk', monospace; }
+  .product-info { padding: 14px; background: #090e14; }
+  .product-category-tag { font-size: 9px; font-weight: 700; color: #43cfff; font-family: 'Space Grotesk', monospace; text-transform: uppercase; margin-bottom: 4px; }
+  .product-name { font-size: 15px; font-weight: 700; color: #eef4fb; margin-bottom: 4px; font-family: 'Space Grotesk', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .product-description { color: #748195; font-size: 12px; margin-bottom: 8px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .product-price { position: relative; display: inline-flex; align-items: center; font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 17px; color: #5bd8ff; margin-bottom: 6px; }
-  .product-stock { color: #58687d; font-size: 11px; margin-bottom: 10px; font-weight: 600; }
-  .view-details-btn { width: 100%; padding: 8px; background: transparent; color: #a9b6c5; border: 1px solid rgba(255,255,255,.10); border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px; margin-bottom: 8px; }
+  .product-price { position: relative; display: inline-flex; align-items: center; font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 16px; color: #5bd8ff; margin-bottom: 6px; }
+  .product-stock { color: #586678; font-size: 11px; margin-bottom: 8px; font-weight: 600; }
+  .view-details-btn { width: 100%; padding: 8px; background: transparent; color: #a9b6c5; border: 1px solid rgba(255,255,255,.10); border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 12px; margin-bottom: 6px; }
   .view-details-btn:hover { color: #fff; border-color: rgba(39,200,255,.35); background: rgba(39,200,255,.06); }
-  .add-to-cart-btn { width: 100%; padding: 10px; background: #fff; color: #050608; border: 0; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
+  .add-to-cart-btn { width: 100%; padding: 9px; background: #fff; color: #050608; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; }
   .add-to-cart-btn:hover:not(:disabled) { background: #bdefff; }
   .add-to-cart-btn:disabled { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); cursor: not-allowed; }
 
-  /* Cart Sidebar */
-  .cart-sidebar { background: rgba(12,17,26,.76); border: 1px solid rgba(255,255,255,.09); border-radius: 20px; padding: 16px; box-shadow: 0 20px 55px rgba(0,0,0,.34); backdrop-filter: blur(18px); }
-  .cart-title { font-size: 16px; font-weight: 700; color: #f2f7ff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-  .cart-empty { text-align: center; color: #68768a; padding: 24px 0; font-size: 14px; }
-  .cart-items { max-height: 280px; overflow-y: auto; margin-bottom: 16px; }
-  .cart-item { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,.07); padding-bottom: 10px; margin-bottom: 10px; font-size: 13px; }
-  .cart-item-name { font-weight: 600; color: #dce6f2; }
-  .cart-item-price { color: #68768a; font-weight: 700; font-size: 12px; }
-  .remove-btn { background: none; border: none; color: #ff5e75; cursor: pointer; font-size: 16px; margin-left: 8px; }
-  .cart-total { border-top: 1px solid rgba(255,255,255,.08); padding-top: 10px; margin-bottom: 12px; }
-  .total-price { font-size: 17px; font-weight: 700; color: #fff; }
-  .checkout-btn { width: 100%; padding: 12px; background: linear-gradient(135deg,#0caee9,#236fff); color: white; border: 0; border-radius: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
-
-  /* Modals */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 16px; }
-  .modal { background: #0a0f16; border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 28px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-  .modal-title { font-size: 21px; font-weight: 700; color: #fff; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
-  .modal-input { width: 100%; padding: 12px 14px; background: #070b10; border: 1.5px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 13px; margin-bottom: 12px; outline: none; }
-  .modal-input:focus { border-color: #24c9ff; box-shadow: 0 0 0 3px rgba(36,201,255,0.15); }
-  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .modal-order-summary { background: #070b10; border-radius: 12px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
-  .modal-order-item { display: flex; justify-content: space-between; font-size: 13px; color: #8794a6; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .modal-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: #24c9ff; margin-top: 12px; }
-  .modal-btns { display: flex; gap: 12px; }
-  .modal-cancel { flex: 1; padding: 12px; background: transparent; color: #8794a6; border: 1.5px solid rgba(255,255,255,0.1); border-radius: 8px; font-weight: 600; cursor: pointer; }
-  .modal-confirm { flex: 1.5; padding: 12px; background: #24bfff; color: #050608; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-
-  /* Product Page Detail */
-  .product-page { max-width: 1400px; margin: 0 auto; background: #050608; min-height: 100vh; padding-bottom: 100px; color: #f5f8fc; }
-  .product-page-back { display: flex; align-items: center; gap: 8px; background: #050608; padding: 14px 16px; border: none; cursor: pointer; width: 100%; font-size: 15px; font-weight: 600; color: #6edcff; border-bottom: 1px solid rgba(255,255,255,.07); }
-  .gallery-wrapper { background: #070b10; position: relative; overflow: hidden; width: 100%; }
-  .gallery-main { position: relative; width: 100%; height: 520px; overflow: hidden; }
-  .gallery-slides { display: flex; height: 100%; width: 100%; transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94); }
-  .gallery-slide { min-width: 100%; max-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%,rgba(17,126,190,.18),transparent 58%),#070b10; flex-shrink: 0; }
-  .gallery-slide img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 28px; filter: drop-shadow(0 35px 35px rgba(0,0,0,.65)); }
-  .gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.12); border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; color: #fff; }
-  .gallery-arrow-left { left: 10px; }
-  .gallery-arrow-right { right: 10px; }
-  .gallery-dots { display: flex; justify-content: center; gap: 6px; padding: 12px 0 8px; background: #070b10; }
-  .gallery-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; cursor: pointer; }
-  .gallery-dot.active { background: #24c9ff; width: 24px; border-radius: 4px; }
-  .gallery-thumbs { display: flex; gap: 8px; padding: 12px 16px; background: #070b10; overflow-x: auto; border-bottom: 1px solid rgba(255,255,255,.07); }
-  .gallery-thumb { flex-shrink: 0; width: 60px; height: 60px; border-radius: 8px; overflow: hidden; border: 2px solid rgba(255,255,255,.08); cursor: pointer; background: #0b1118; }
-  .gallery-thumb.active { border-color: #2bcaff; box-shadow: 0 0 0 1px #2bcaff; }
-  .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .product-details-card { background: #070b10; padding: 38px 5vw; }
-  .product-page-price { font-size: 30px; font-weight: 800; color: #62dcff; font-family: 'Space Grotesk', monospace; margin-bottom: 4px; }
-  .product-page-name { font-size: clamp(26px,4vw,48px); font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: #f7faff; margin-bottom: 10px; }
-  .product-page-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
-  .stars { display: flex; gap: 2px; }
-  .rating-text { font-size: 13px; color: #8795a7; }
-  .product-page-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-  .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: 'Space Grotesk', monospace; background: rgba(255,255,255,.045); color: #b8c6d5; border: 1px solid rgba(255,255,255,.09); }
-  .product-page-divider { height: 1px; background: rgba(255,255,255,.08); margin: 14px 0; }
-  .product-page-desc-title { font-size: 11px; font-weight: 700; color: #5e7085; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-  .product-page-desc { font-size: 14px; color: #8795a7; line-height: 1.7; }
-  .product-page-bottom { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1400px; background: rgba(5,7,11,0.96); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08); padding: 12px 16px; display: flex; gap: 10px; z-index: 200; }
-  .btn-whatsapp { flex: 1; padding: 13px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
-  .btn-add-cart { flex: 1; padding: 13px; background: #fff; color: #050608; border: 1px solid #fff; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-
-  /* Reviews & Related */
-  .related-section, .reviews-section { background: #070b10; border-top: 1px solid rgba(255,255,255,.06); padding: 24px 5vw; }
-  .related-title, .reviews-title { font-size: 18px; font-weight: 700; color: #eef4fb; margin-bottom: 14px; font-family: 'Space Grotesk', sans-serif; }
-  .related-grid { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
-  .related-card { flex: 0 0 140px; background: #0b1118; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,.08); cursor: pointer; }
-  .related-img { width: 100%; height: 100px; object-fit: cover; background: #0d1219; }
-  .related-info { padding: 8px; }
-  .related-name { font-size: 12px; font-weight: 600; color: #eef4fb; }
-  .related-price { font-size: 12px; color: #24c9ff; font-weight: 700; }
-  .review-card { background: #0b1118; border-radius: 10px; padding: 14px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,.08); }
-  .review-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
-  .review-name { font-weight: 600; color: #eef4fb; font-size: 14px; }
-  .review-comment { font-size: 13px; color: #7e8da1; }
-  .add-review-form { background: #0b1118; border-radius: 10px; padding: 16px; border: 1px solid rgba(255,255,255,.08); margin-top: 16px; }
-  .review-stars-input { display: flex; gap: 6px; margin-bottom: 10px; }
-  .review-star-btn { background: none; border: none; cursor: pointer; }
-
-  /* Admin Dashboard Styles */
-  .admin-panel { background: #0a0f16; border-radius: 14px; padding: 20px; border: 1px solid rgba(255,255,255,0.08); }
-  .admin-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-  .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-  .admin-tab { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.08); color: #8794a6; background: #070b10; }
+  /* ── ADMIN PANEL LAYOUT & RESPONSIVENESS FIX ── */
+  .admin-panel { 
+    background: #0a0f16; border-radius: 14px; padding: 20px; 
+    border: 1px solid rgba(255,255,255,0.08); width: 100%; max-width: 100%; overflow: hidden;
+  }
+  .admin-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; width: 100%; }
+  .admin-tab { padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.08); color: #8794a6; background: #070b10; }
   .admin-tab.active { background: rgba(36,201,255,0.15); border-color: #24c9ff; color: #24c9ff; }
-  .add-product-form { background: #070b10; border-radius: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); }
+  
+  .add-product-form { background: #070b10; border-radius: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08); width: 100%; }
   .form-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; width: 100%; }
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
   .form-full { grid-column: 1 / -1; }
   .form-input { padding: 10px 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 13px; width: 100%; background: #0a0f16; color: #fff; outline: none; }
-  .image-upload-area { border: 2px dashed rgba(255,255,255,0.15); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; background: #0a0f16; display: block; }
+  
+  .image-upload-area { border: 2px dashed rgba(255,255,255,0.15); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; background: #0a0f16; display: block; width: 100%; }
   .image-upload-area input { display: none; }
   .upload-text { font-size: 13px; color: #8794a6; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .upload-hint { font-size: 11px; color: #586678; margin-top: 4px; }
   .image-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
-  .preview-item { position: relative; width: 80px; height: 80px; }
+  .preview-item { position: relative; width: 70px; height: 70px; }
   .preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255,255,255,0.1); }
-  .remove-image-btn { position: absolute; top: -8px; right: -8px; background: #ff5e75; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-  .submit-btn { background: #24c9ff; color: #050608; padding: 11px 24px; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; }
-  .products-management-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-  .product-management-card { background: #070b10; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; }
-  .product-management-image { width: 100%; height: 160px; background: #0a0f16; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+  .remove-image-btn { position: absolute; top: -6px; right: -6px; background: #ff5e75; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+  .submit-btn { background: #24c9ff; color: #050608; padding: 10px 20px; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 13px; }
+
+  .products-management-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; width: 100%; }
+  .product-management-card { background: #070b10; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; }
+  .product-management-image { width: 100%; height: 140px; background: #0a0f16; border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
   .product-management-image img { width: 100%; height: 100%; object-fit: cover; }
   .admin-card-actions { display: flex; gap: 8px; margin-top: 10px; }
-  .edit-btn, .delete-btn { flex: 1; padding: 8px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 12px; border: 0; }
+  .edit-btn, .delete-btn { flex: 1; padding: 7px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 11px; border: 0; }
   .edit-btn { background: rgba(36,201,255,0.15); color: #24c9ff; }
   .delete-btn { background: rgba(255,94,117,0.15); color: #ff5e75; }
 
-  .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  /* ── ORDERS VIEW: MOBILE CARDS & DESKTOP TABLE ── */
+  .orders-section { background: #070b10; border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); width: 100%; }
+  .orders-desktop-container { width: 100%; overflow-x: auto; display: none; }
+  @media (min-width: 768px) { .orders-desktop-container { display: block; } }
+  
+  .orders-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
   .orders-table th { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #586678; font-size: 11px; text-transform: uppercase; font-family: 'Space Grotesk', monospace; }
-  .orders-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #8794a6; vertical-align: top; }
+  .orders-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #8794a6; vertical-align: middle; }
+  
+  .orders-mobile-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+  @media (min-width: 768px) { .orders-mobile-list { display: none; } }
+  
+  .order-mobile-card {
+    background: #0a0f16; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px;
+    display: flex; flex-direction: column; gap: 8px; width: 100%;
+  }
+  .order-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .order-card-title { color: #fff; font-weight: 700; font-size: 14px; }
+  .order-card-price { color: #24c9ff; font-weight: 700; font-family: 'Space Grotesk', monospace; font-size: 14px; }
+  .order-card-details { font-size: 12px; color: #8794a6; line-height: 1.4; }
+  
   .order-status-select { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; outline: none; }
   .status-pending { background: rgba(245,166,35,0.15); color: #f5a623; }
   .status-shipped { background: rgba(36,201,255,0.15); color: #24c9ff; }
   .status-delivered { background: rgba(34,197,94,0.15); color: #22c55e; }
   .status-cancelled { background: rgba(255,94,117,0.15); color: #ff5e75; }
 
-  .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-  .stat-card { background: #070b10; border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); }
-  .stat-label { font-size: 11px; color: #586678; text-transform: uppercase; margin-bottom: 6px; font-family: 'Space Grotesk', monospace; }
-  .stat-value { font-size: 24px; font-weight: 700; color: #fff; font-family: 'Space Grotesk', monospace; }
+  .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; width: 100%; }
+  .stat-card { background: #070b10; border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.08); }
+  .stat-label { font-size: 10px; color: #586678; text-transform: uppercase; margin-bottom: 4px; font-family: 'Space Grotesk', monospace; }
+  .stat-value { font-size: 20px; font-weight: 700; color: #fff; font-family: 'Space Grotesk', monospace; }
 
-  .footer { background: #030508; border-top: 1px solid rgba(255,255,255,.08); color: #738095; padding: 45px 20px; text-align: center; }
-  .footer p { margin: 6px 0; font-size: 13px; }
-
-  @media (min-width: 900px) {
-    .product-page { display: grid; grid-template-columns: 1.15fr .85fr; align-items: start; min-height: calc(100vh - 70px); }
-    .product-page-back { grid-column: 1 / -1; }
-    .gallery-wrapper { position: sticky; top: 75px; min-height: calc(100vh - 75px); }
-    .gallery-main { height: 600px; }
-    .product-details-card { min-height: 600px; padding: 70px 5vw 60px 40px; margin: 0; display: flex; flex-direction: column; justify-content: center; }
-    .related-section, .reviews-section, .product-page-bottom { grid-column: 1 / -1; }
-  }
+  .footer { background: #030508; border-top: 1px solid rgba(255,255,255,.08); color: #738095; padding: 35px 20px; text-align: center; width: 100%; }
+  .footer p { margin: 6px 0; font-size: 12px; }
 
   @media (max-width: 899px) {
     .hero-cinematic-inner { grid-template-columns: 1fr; gap: 10px; }
@@ -334,13 +295,11 @@ const styles = `
     .hero-collage-1 { width: 250px; height: 250px; left: 8%; top: 6%; }
     .hero-collage-2 { width: 170px; height: 170px; right: 2%; top: 0; }
     .hero-collage-3 { width: 185px; height: 185px; right: 8%; bottom: 0; }
-    .category-showcase-grid { grid-template-columns: repeat(2,1fr); grid-auto-rows: 250px; }
-    .products-grid { grid-template-columns: repeat(2,1fr); }
-    .dashboard-grid { grid-template-columns: repeat(2,1fr); }
+    .category-showcase-grid { grid-template-columns: repeat(2,1fr); grid-auto-rows: 240px; }
   }
 `;
 
-/* ─── ULTRA-REALISTIC LUXURY MAKEUP STAGE ─── */
+/* ─── MAKEUP BOX UNBOXING 3D STAGE ─── */
 const SCENES = [
   { eyebrow: 'THE UNBOXING EXPERIENCE', title: 'Beauty, Unboxed.', body: 'Watch the curated kit land and open with precision.' },
   { eyebrow: 'PRECISION CRAFTED', title: 'Every Piece, Revealed.', body: 'Essentials emerge and align into your personalized vanity display.' },
@@ -392,7 +351,6 @@ function ScrollProductStage() {
     sizeRenderer();
     window.addEventListener('resize', sizeRenderer);
 
-    // Studio Lights
     const ambient = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambient);
 
@@ -416,24 +374,15 @@ function ScrollProductStage() {
     warmFill.position.set(-3, -2, 5);
     scene.add(warmFill);
 
-    // Luxury Material Definitions
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: 0xdfb76c, roughness: 0.18, metalness: 0.94
-    });
-    const obsidianMat = new THREE.MeshPhysicalMaterial({
-      color: 0x080c14, roughness: 0.28, metalness: 0.35, clearcoat: 0.85, clearcoatRoughness: 0.12
-    });
+    const goldMat = new THREE.MeshStandardMaterial({ color: 0xdfb76c, roughness: 0.18, metalness: 0.94 });
+    const obsidianMat = new THREE.MeshPhysicalMaterial({ color: 0x080c14, roughness: 0.28, metalness: 0.35, clearcoat: 0.85, clearcoatRoughness: 0.12 });
 
-    const shadowPlate = new THREE.Mesh(
-      new THREE.CircleGeometry(3.6, 64),
-      new THREE.ShadowMaterial({ opacity: 0.35 })
-    );
+    const shadowPlate = new THREE.Mesh(new THREE.CircleGeometry(3.6, 64), new THREE.ShadowMaterial({ opacity: 0.35 }));
     shadowPlate.rotation.x = -Math.PI / 2;
     shadowPlate.position.y = -1.15;
     shadowPlate.receiveShadow = true;
     rootRig.add(shadowPlate);
 
-    // 1. Box Body
     const kitGroup = new THREE.Group();
     rootRig.add(kitGroup);
 
@@ -442,17 +391,13 @@ function ScrollProductStage() {
     boxBase.castShadow = true;
     boxBase.receiveShadow = true;
 
-    const velvetCushion = new THREE.Mesh(
-      new THREE.BoxGeometry(3.0, 0.4, 2.0),
-      new THREE.MeshStandardMaterial({ color: 0x0f1724, roughness: 0.85, metalness: 0.05 })
-    );
+    const velvetCushion = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.4, 2.0), new THREE.MeshStandardMaterial({ color: 0x0f1724, roughness: 0.85, metalness: 0.05 }));
     velvetCushion.position.y = -0.19;
 
     const goldBorder = new THREE.Mesh(new THREE.BoxGeometry(3.24, 0.05, 2.24), goldMat);
     goldBorder.position.y = 0.01;
     kitGroup.add(boxBase, velvetCushion, goldBorder);
 
-    // Hinged Lid with Real Refractive Glass Mirror
     const lidHinge = new THREE.Group();
     lidHinge.position.set(0, 0.02, -1.1);
 
@@ -463,29 +408,20 @@ function ScrollProductStage() {
     const lidGoldTrim = new THREE.Mesh(new THREE.BoxGeometry(3.24, 0.02, 2.24), goldMat);
     lidGoldTrim.position.set(0, 0.08, 1.1);
 
-    const mirrorGlass = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.8, 1.8),
-      new THREE.MeshPhysicalMaterial({
-        color: 0xffffff, roughness: 0.02, metalness: 0.98, clearcoat: 1.0, clearcoatRoughness: 0.05
-      })
-    );
+    const mirrorGlass = new THREE.Mesh(new THREE.PlaneGeometry(2.8, 1.8), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.02, metalness: 0.98, clearcoat: 1.0, clearcoatRoughness: 0.05 }));
     mirrorGlass.position.set(0, 0.01, 1.1);
     mirrorGlass.rotation.x = Math.PI / 2;
 
     lidHinge.add(lidMesh, lidGoldTrim, mirrorGlass);
     kitGroup.add(lidHinge);
 
-    // 2. Realistic Makeup Products
     const items = [];
     function registerItem(mesh, finalPos, finalRot, startPos) {
       mesh.position.copy(startPos);
       mesh.scale.set(0.001, 0.001, 0.001);
       mesh.userData = { finalPos, finalRot, startPos };
       mesh.traverse((c) => {
-        if (c.isMesh) {
-          c.castShadow = true;
-          c.receiveShadow = true;
-        }
+        if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
       });
       rootRig.add(mesh);
       items.push(mesh);
@@ -501,18 +437,13 @@ function ScrollProductStage() {
     const lipBulletGeom = new THREE.CylinderGeometry(0.18, 0.19, 0.55, 48);
     const pos = lipBulletGeom.attributes.position;
     for (let i = 0; i < pos.count; i++) {
-      if (pos.getY(i) > 0.15) {
-        pos.setY(i, pos.getY(i) - (pos.getX(i) + 0.18) * 0.45);
-      }
+      if (pos.getY(i) > 0.15) pos.setY(i, pos.getY(i) - (pos.getX(i) + 0.18) * 0.45);
     }
     lipBulletGeom.computeVertexNormals();
 
-    const lipWaxMat = new THREE.MeshPhysicalMaterial({
-      color: 0xeb3b5a, roughness: 0.32, metalness: 0.05, clearcoat: 0.6, clearcoatRoughness: 0.2
-    });
+    const lipWaxMat = new THREE.MeshPhysicalMaterial({ color: 0xeb3b5a, roughness: 0.32, metalness: 0.05, clearcoat: 0.6, clearcoatRoughness: 0.2 });
     const lipBulletMesh = new THREE.Mesh(lipBulletGeom, lipWaxMat);
     lipBulletMesh.position.y = 0.9;
-
     lipGroup.add(lipBaseTube, lipGoldChamber, lipBulletMesh);
     registerItem(lipGroup, new THREE.Vector3(-1.45, -0.35, 1.05), new THREE.Vector3(0.05, 0.35, 0), new THREE.Vector3(-0.4, -0.1, 0));
 
@@ -523,40 +454,22 @@ function ScrollProductStage() {
     compactGoldRing.rotation.x = Math.PI / 2;
     compactGoldRing.position.y = 0.08;
 
-    const powderTextureMat = new THREE.MeshStandardMaterial({
-      color: 0xe6c5a8, roughness: 0.88, metalness: 0.02
-    });
+    const powderTextureMat = new THREE.MeshStandardMaterial({ color: 0xe6c5a8, roughness: 0.88, metalness: 0.02 });
     const powderPan = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.05, 48), powderTextureMat);
     powderPan.position.y = 0.09;
-
     compactGroup.add(compactCase, compactGoldRing, powderPan);
     registerItem(compactGroup, new THREE.Vector3(-0.48, -0.72, 1.25), new THREE.Vector3(0.28, 0.05, 0), new THREE.Vector3(0, -0.1, 0));
 
     // Perfume Bottle
     const perfumeGroup = new THREE.Group();
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x76ddff,
-      roughness: 0.06,
-      transmission: 0.88,
-      thickness: 1.1,
-      ior: 1.52,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.04
-    });
+    const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x76ddff, roughness: 0.06, transmission: 0.88, thickness: 1.1, ior: 1.52, clearcoat: 1.0, clearcoatRoughness: 0.04 });
     const bottleBody = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.92, 0.42), glassMat);
-    
-    const perfumeLiquid = new THREE.Mesh(
-      new THREE.BoxGeometry(0.52, 0.72, 0.32),
-      new THREE.MeshStandardMaterial({ color: 0x19bfff, roughness: 0.2, metalness: 0.1, transparent: true, opacity: 0.75 })
-    );
+    const perfumeLiquid = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.72, 0.32), new THREE.MeshStandardMaterial({ color: 0x19bfff, roughness: 0.2, metalness: 0.1, transparent: true, opacity: 0.75 }));
     perfumeLiquid.position.y = -0.06;
-
     const goldNeck = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.14, 32), goldMat);
     goldNeck.position.y = 0.52;
-
     const goldCap = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.3, 32), obsidianMat);
     goldCap.position.y = 0.72;
-
     perfumeGroup.add(bottleBody, perfumeLiquid, goldNeck, goldCap);
     registerItem(perfumeGroup, new THREE.Vector3(1.42, -0.32, 0.95), new THREE.Vector3(0, -0.35, 0), new THREE.Vector3(0.5, -0.1, 0));
 
@@ -564,16 +477,11 @@ function ScrollProductStage() {
     const brushGroup = new THREE.Group();
     const handleMat = new THREE.MeshStandardMaterial({ color: 0x12161f, roughness: 0.3, metalness: 0.2 });
     const brushHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.065, 1.4, 32), handleMat);
-    
     const brushFerrule = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.24, 32), goldMat);
     brushFerrule.position.y = 0.72;
-
-    const bristleMat = new THREE.MeshStandardMaterial({
-      color: 0x1c1e24, roughness: 0.92, metalness: 0.0
-    });
+    const bristleMat = new THREE.MeshStandardMaterial({ color: 0x1c1e24, roughness: 0.92, metalness: 0.0 });
     const bristles = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.45, 32), bristleMat);
     bristles.position.y = 1.04;
-
     brushGroup.add(brushHandle, brushFerrule, bristles);
     registerItem(brushGroup, new THREE.Vector3(0.52, 0.08, 1.15), new THREE.Vector3(0.15, 0.18, -0.35), new THREE.Vector3(0.2, -0.1, 0.1));
 
@@ -585,24 +493,19 @@ function ScrollProductStage() {
       return Math.min(1, Math.max(0, -rect.top / total));
     }
 
-    function smooth(t) {
-      return t * t * (3 - 2 * t);
-    }
+    function smooth(t) { return t * t * (3 - 2 * t); }
 
     function applyProgress(p) {
-      // Box drop
       const pDrop = Math.min(1, Math.max(0, p / 0.32));
       const eDrop = smooth(pDrop);
       kitGroup.position.y = THREE.MathUtils.lerp(5.2, -0.65, eDrop);
       kitGroup.position.z = THREE.MathUtils.lerp(-2.2, 0, eDrop);
       kitGroup.rotation.x = THREE.MathUtils.lerp(0.45, 0.14, eDrop);
 
-      // Lid opening
       const pLid = Math.min(1, Math.max(0, (p - 0.28) / 0.30));
       const eLid = smooth(pLid);
       lidHinge.rotation.x = THREE.MathUtils.lerp(0, -1.95, eLid);
 
-      // Items emergence
       items.forEach((item, idx) => {
         const itemDelay = 0.48 + idx * 0.07;
         const pItem = Math.min(1, Math.max(0, (p - itemDelay) / 0.38));
@@ -669,12 +572,13 @@ function ScrollProductStage() {
   }, []);
 
   return (
-    <section ref={stageRef} style={{ position: 'relative', height: '420vh' }}>
+    <section ref={stageRef} style={{ position: 'relative', height: '420vh', width: '100%' }}>
       <style>{`
         .spstage-sticky {
           position: sticky; top: 0; height: 100svh; min-height: 600px; overflow: hidden;
           background: radial-gradient(ellipse at 50% 35%, rgba(36,201,255,0.14), transparent 65%),
                       linear-gradient(180deg, #05070b 0%, #090d14 100%);
+          width: 100%;
         }
         .spstage-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; display: block; }
         .spstage-scene {
@@ -715,11 +619,7 @@ function ScrollProductStage() {
         <canvas ref={canvasRef} className="spstage-canvas" />
         <div className="spstage-hint">Scroll down to unbox</div>
         {SCENES.map((s, i) => (
-          <div
-            key={i}
-            ref={(el) => (sceneElsRef.current[i] = el)}
-            className="spstage-scene"
-          >
+          <div key={i} ref={(el) => (sceneElsRef.current[i] = el)} className="spstage-scene">
             {s.eyebrow && <div className="spstage-eyebrow">{s.eyebrow}</div>}
             <h2 className="spstage-title">{s.title}</h2>
             {s.body && <p className="spstage-body">{s.body}</p>}
@@ -759,11 +659,7 @@ function Reveal({ children, delay = 0, className = '' }) {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={`reveal ${visible ? 'reveal-visible' : ''} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
+    <div ref={ref} className={`reveal ${visible ? 'reveal-visible' : ''} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
       {children}
     </div>
   );
@@ -822,113 +718,29 @@ function ProductPage({ product, onBack, onAddToCart, allProducts }) {
   const related = allProducts.filter(p => p.id !== product.id && p.category === product.category).slice(0, 6);
 
   return (
-    <div className="product-page">
-      <button className="product-page-back" onClick={onBack}>
-        <ArrowLeft size={20} /> Back to Shop
+    <div className="product-page" style={{ width: '100%', padding: '0 5vw 100px' }}>
+      <button className="product-page-back" onClick={onBack} style={{ background: 'transparent', border: 0, color: '#24c9ff', padding: '14px 0', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+        <ArrowLeft size={18} /> Back to Shop
       </button>
-      <div className="gallery-wrapper">
-        <div className="gallery-main" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-          <div className="gallery-slides" style={{ transform: `translateX(-${current * 100}%)` }}>
-            {images.map((img, i) => (
-              <div className="gallery-slide" key={i}>
-                <img src={img} alt={`${product.name} ${i + 1}`} />
-              </div>
-            ))}
+      <div style={{ width: '100%', height: 380, background: '#090e14', borderRadius: 12, overflow: 'hidden', position: 'relative' }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <img src={images[current] || ''} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 20 }} />
+        {images.length > 1 && (
+          <div style={{ position: 'absolute', bottom: 10, right: 12, background: 'rgba(0,0,0,0.65)', color: 'white', borderRadius: 20, padding: '3px 10px', fontSize: 11 }}>
+            {current + 1} / {images.length}
           </div>
-          <button className={`gallery-arrow gallery-arrow-left ${current === 0 ? 'gallery-arrow-hidden' : ''}`} onClick={() => goTo(current - 1)}><ChevronLeft size={20} /></button>
-          <button className={`gallery-arrow gallery-arrow-right ${current === images.length - 1 ? 'gallery-arrow-hidden' : ''}`} onClick={() => goTo(current + 1)}><ChevronRight size={20} /></button>
-          {images.length > 1 && (
-            <div style={{ position: 'absolute', bottom: 10, right: 12, background: 'rgba(18,24,21,0.7)', color: 'white', borderRadius: 20, padding: '3px 10px', fontSize: 12 }}>
-              {current + 1} / {images.length}
-            </div>
-          )}
-        </div>
-        {images.length > 1 && (
-          <div className="gallery-dots">{images.map((_, i) => <button key={i} className={`gallery-dot ${i === current ? 'active' : ''}`} onClick={() => goTo(i)} />)}</div>
-        )}
-        {images.length > 1 && (
-          <div className="gallery-thumbs">{images.map((img, i) => <div key={i} className={`gallery-thumb ${i === current ? 'active' : ''}`} onClick={() => goTo(i)}><img src={img} alt="" /></div>)}</div>
         )}
       </div>
 
-      <div className="product-details-card">
-        <div className="product-page-price">Rs. {product.price}</div>
-        <div className="product-page-name">{product.name}</div>
-        {product.category && <div style={{ fontSize: 12, color: '#24c9ff', fontWeight: 700, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1, fontFamily: "'Space Grotesk', monospace" }}>{product.category}</div>}
-        <div className="product-page-rating">
-          <div className="stars">
-            {[1,2,3,4,5].map(s => <Star key={s} size={15} fill={s <= Math.round(avgRating || 4) ? '#f5a623' : 'none'} color={s <= Math.round(avgRating || 4) ? '#f5a623' : '#586678'} />)}
-          </div>
-          <span className="rating-text">{avgRating || '4.0'} · {reviews.length} reviews · Stock: {product.stock}</span>
+      <div style={{ padding: '24px 0' }}>
+        <div style={{ fontSize: 24, fontWeight: 800, color: '#24c9ff', fontFamily: "'Space Grotesk', monospace" }}>Rs. {product.price}</div>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#fff', margin: '6px 0 10px' }}>{product.name}</h1>
+        {product.category && <div style={{ fontSize: 12, color: '#586678', textTransform: 'uppercase', marginBottom: 12 }}>{product.category}</div>}
+        <div style={{ fontSize: 13, color: '#8794a6', lineHeight: 1.6, marginBottom: 16 }}>{product.description || 'No description provided.'}</div>
+        
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button className="btn-whatsapp" onClick={handleWhatsApp} style={{ flex: 1, padding: 12, background: 'rgba(255,255,255,0.08)', color: 'white', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, cursor: 'pointer', fontWeight: 600 }}>📱 WhatsApp</button>
+          <button className="btn-add-cart" onClick={() => { onAddToCart(product); onBack(); }} disabled={product.stock === 0} style={{ flex: 1, padding: 12, background: '#fff', color: '#050608', border: 0, borderRadius: 8, cursor: 'pointer', fontWeight: 700 }}>Add to Cart</button>
         </div>
-        <div className="product-page-badges">
-          <span className="badge">💵 Cash on Delivery</span>
-          {product.stock > 0 ? <span className="badge">✅ Available</span> : <span className="badge" style={{ color: '#ff5e75' }}>❌ Out of Stock</span>}
-          {product.stock > 0 && product.stock <= 5 && <span className="badge" style={{ color: '#ff6b4a' }}>🔥 Only {product.stock} left!</span>}
-          <span className="badge">🚚 Free Delivery</span>
-        </div>
-        <div className="product-page-divider" />
-        <div className="product-page-desc-title">Product Details</div>
-        <div className="product-page-desc">{product.description || 'No description provided.'}</div>
-      </div>
-
-      {related.length > 0 && (
-        <div className="related-section">
-          <div className="related-title">You may also like</div>
-          <div className="related-grid">
-            {related.map(p => (
-              <div key={p.id} className="related-card" onClick={() => onBack()}>
-                <img className="related-img" src={p.images?.[0] || p.image || ''} alt={p.name} />
-                <div className="related-info">
-                  <div className="related-name">{p.name}</div>
-                  <div className="related-price">Rs. {p.price}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="reviews-section">
-        <div className="reviews-title">⭐ Customer Reviews</div>
-        {reviews.map(r => (
-          <div key={r.id} className="review-card">
-            <div className="review-header">
-              <div>
-                <div className="review-name">{r.customer_name}</div>
-                <div className="stars" style={{ marginTop: 4 }}>
-                  {[1,2,3,4,5].map(s => <Star key={s} size={13} fill={s <= r.rating ? '#f5a623' : 'none'} color={s <= r.rating ? '#f5a623' : '#586678'} />)}
-                </div>
-              </div>
-              <div style={{ fontSize: 11, color: '#586678' }}>{new Date(r.created_at).toLocaleDateString()}</div>
-            </div>
-            {r.comment && <div className="review-comment">{r.comment}</div>}
-          </div>
-        ))}
-        <div className="add-review-form">
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Leave a Review</div>
-          <div className="review-stars-input">
-            {[1,2,3,4,5].map(s => (
-              <button key={s} type="button" className="review-star-btn"
-                onMouseEnter={() => setHoverStar(s)}
-                onMouseLeave={() => setHoverStar(0)}
-                onClick={() => setNewReview({ ...newReview, rating: s })}
-              >
-                <Star size={20} fill={s <= (hoverStar || newReview.rating) ? '#f5a623' : 'none'} color={s <= (hoverStar || newReview.rating) ? '#f5a623' : '#586678'} />
-              </button>
-            ))}
-          </div>
-          <input className="modal-input" placeholder="Your name" value={newReview.name} onChange={e => setNewReview({ ...newReview, name: e.target.value })} style={{ marginBottom: 10 }} />
-          <textarea className="modal-input" placeholder="Your review (optional)" value={newReview.comment} onChange={e => setNewReview({ ...newReview, comment: e.target.value })} style={{ resize: 'vertical', minHeight: 60 }} />
-          <button className="submit-btn" onClick={handleSubmitReview} style={{ marginTop: 8 }}>Submit Review</button>
-        </div>
-      </div>
-
-      <div className="product-page-bottom">
-        <button className="btn-whatsapp" onClick={handleWhatsApp}>📱 WhatsApp</button>
-        <button className="btn-add-cart" onClick={() => { onAddToCart(product); onBack(); }} disabled={product.stock === 0}>
-          <ShoppingCart size={16} /> Add to Cart
-        </button>
       </div>
     </div>
   );
@@ -941,7 +753,6 @@ export default function LyfelyticEcommerce() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Reference for smooth jump straight to product catalog
   const productsSectionRef = useRef(null);
 
   const openProduct = (product) => {
@@ -1073,7 +884,6 @@ export default function LyfelyticEcommerce() {
     localStorage.setItem('lyf_wishlist', JSON.stringify(updated));
   };
 
-  // Robust Case-Insensitive Filtering
   const filteredProducts = products.filter(p => {
     const matchSearch = p.name?.toLowerCase().includes(searchQuery.toLowerCase()) || p.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchCat = selectedCategory === 'All' || p.category?.toLowerCase() === selectedCategory.toLowerCase();
@@ -1224,27 +1034,26 @@ export default function LyfelyticEcommerce() {
 
       {/* Checkout Modal */}
       {showCheckout && (
-        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowCheckout(false)}>
-          <div className="modal">
-            <div className="modal-title"><ClipboardList size={22} /> Place Your Order</div>
-            <div className="modal-order-summary">
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={e => e.target === e.currentTarget && setShowCheckout(false)}>
+          <div style={{ background: '#0a0f16', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14, padding: 24, width: '100%', maxWidth: 440, maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><ClipboardList size={20} /> Complete Order</div>
+            <div style={{ background: '#070b10', padding: 14, borderRadius: 8, marginBottom: 16, border: '1px solid rgba(255,255,255,0.06)' }}>
               {cart.map((item, i) => (
-                <div key={i} className="modal-order-item">
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#8794a6', padding: '4px 0' }}>
                   <span>{item.name}</span><span>Rs. {item.price}</span>
                 </div>
               ))}
-              <div className="modal-total"><span>Total</span><span>Rs. {totalPrice}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, color: '#24c9ff', marginTop: 10, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                <span>Total</span><span>Rs. {totalPrice}</span>
+              </div>
             </div>
-            <input className="modal-input" placeholder="Full Name *" value={checkoutForm.name} onChange={e => setCheckoutForm({ ...checkoutForm, name: e.target.value })} />
-            <div className="modal-row">
-              <input className="modal-input" placeholder="Phone *" value={checkoutForm.phone} onChange={e => setCheckoutForm({ ...checkoutForm, phone: e.target.value })} />
-              <input className="modal-input" placeholder="Email (optional)" value={checkoutForm.email} onChange={e => setCheckoutForm({ ...checkoutForm, email: e.target.value })} />
-            </div>
-            <input className="modal-input" placeholder="Full Address *" value={checkoutForm.address} onChange={e => setCheckoutForm({ ...checkoutForm, address: e.target.value })} />
-            <input className="modal-input" placeholder="City *" value={checkoutForm.city} onChange={e => setCheckoutForm({ ...checkoutForm, city: e.target.value })} />
-            <div className="modal-btns">
-              <button className="modal-cancel" onClick={() => setShowCheckout(false)}>Cancel</button>
-              <button className="modal-confirm" onClick={handlePlaceOrder}>📱 Confirm order</button>
+            <input className="form-input" style={{ marginBottom: 10 }} placeholder="Full Name *" value={checkoutForm.name} onChange={e => setCheckoutForm({ ...checkoutForm, name: e.target.value })} />
+            <input className="form-input" style={{ marginBottom: 10 }} placeholder="Phone Number *" value={checkoutForm.phone} onChange={e => setCheckoutForm({ ...checkoutForm, phone: e.target.value })} />
+            <input className="form-input" style={{ marginBottom: 10 }} placeholder="City *" value={checkoutForm.city} onChange={e => setCheckoutForm({ ...checkoutForm, city: e.target.value })} />
+            <input className="form-input" style={{ marginBottom: 16 }} placeholder="Delivery Address *" value={checkoutForm.address} onChange={e => setCheckoutForm({ ...checkoutForm, address: e.target.value })} />
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => setShowCheckout(false)} style={{ flex: 1, padding: 10, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#8794a6', borderRadius: 8, cursor: 'pointer' }}>Cancel</button>
+              <button onClick={handlePlaceOrder} style={{ flex: 1.5, padding: 10, background: '#24c9ff', border: 0, color: '#050608', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>Confirm Order</button>
             </div>
           </div>
         </div>
@@ -1252,35 +1061,21 @@ export default function LyfelyticEcommerce() {
 
       {/* Edit Product Modal */}
       {editingProduct && (
-        <div className="edit-modal-overlay" onClick={e => e.target === e.currentTarget && setEditingProduct(null)}>
-          <div className="edit-modal">
-            <div className="modal-title"><Edit2 size={20} /> Edit Product</div>
-            <input className="modal-input" placeholder="Name" value={editingProduct.name} onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })} />
-            <div className="modal-row">
-              <input className="modal-input" type="number" placeholder="Price" value={editingProduct.price} onChange={e => setEditingProduct({ ...editingProduct, price: e.target.value })} />
-              <input className="modal-input" type="number" placeholder="Stock" value={editingProduct.stock} onChange={e => setEditingProduct({ ...editingProduct, stock: e.target.value })} />
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }} onClick={e => e.target === e.currentTarget && setEditingProduct(null)}>
+          <div style={{ background: '#0a0f16', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14, padding: 24, width: '100%', maxWidth: 440, maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 16 }}><Edit2 size={18} /> Edit Product</div>
+            <input className="form-input" style={{ marginBottom: 10 }} placeholder="Name" value={editingProduct.name} onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })} />
+            <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+              <input className="form-input" type="number" placeholder="Price" value={editingProduct.price} onChange={e => setEditingProduct({ ...editingProduct, price: e.target.value })} />
+              <input className="form-input" type="number" placeholder="Stock" value={editingProduct.stock} onChange={e => setEditingProduct({ ...editingProduct, stock: e.target.value })} />
             </div>
-            <select className="modal-input" value={editingProduct.category} onChange={e => setEditingProduct({ ...editingProduct, category: e.target.value })}>
+            <select className="form-input" style={{ marginBottom: 10 }} value={editingProduct.category} onChange={e => setEditingProduct({ ...editingProduct, category: e.target.value })}>
               {categories.map(c => <option key={c}>{c}</option>)}
             </select>
-            <textarea className="modal-input" placeholder="Description" value={editingProduct.description} onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })} />
-            <label className="image-upload-area" style={{ marginBottom: 12 }}>
-              <input type="file" accept="image/*" multiple onChange={e => handleImagesUpload(e, true)} />
-              <div className="upload-text"><Upload size={18} /> Add more images</div>
-            </label>
-            {editingProduct.images?.length > 0 && (
-              <div className="image-preview" style={{ marginBottom: 14 }}>
-                {editingProduct.images.map((img, idx) => (
-                  <div key={idx} className="preview-item">
-                    <img src={img} alt="" />
-                    <button type="button" className="remove-image-btn" onClick={() => setEditingProduct(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== idx) }))}>✕</button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="modal-btns">
-              <button className="modal-cancel" onClick={() => setEditingProduct(null)}>Cancel</button>
-              <button className="modal-confirm" onClick={handleSaveEdit}><Check size={16} /> Save Changes</button>
+            <textarea className="form-input" style={{ marginBottom: 14, resize: 'vertical', minHeight: 70 }} placeholder="Description" value={editingProduct.description} onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })} />
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => setEditingProduct(null)} style={{ flex: 1, padding: 10, background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#8794a6', borderRadius: 8, cursor: 'pointer' }}>Cancel</button>
+              <button onClick={handleSaveEdit} style={{ flex: 1.5, padding: 10, background: '#24c9ff', border: 0, color: '#050608', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>Save Changes</button>
             </div>
           </div>
         </div>
@@ -1289,7 +1084,7 @@ export default function LyfelyticEcommerce() {
       {/* Header */}
       <header className="lyfelytic-header">
         <div className="header-content">
-          <div className="brand"><Package size={26} /><div><h1>Lyfelytic</h1><p>Daily Life Accessories</p></div></div>
+          <div className="brand"><Package size={22} /><h1>Lyfelytic</h1></div>
           <div className="nav-buttons">
             {!isAdmin && (
               <>
@@ -1306,7 +1101,7 @@ export default function LyfelyticEcommerce() {
             {isAdmin && <button onClick={() => setIsAdmin(false)} className="nav-btn nav-btn-exit"><LogOut size={15} /> Exit Admin</button>}
           </div>
           <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
         <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
@@ -1354,13 +1149,8 @@ export default function LyfelyticEcommerce() {
                   ))}
                 </div>
               ) : (
-                <div className="hero-product-placeholder"><Package size={68} color="#36caff" /></div>
+                <div style={{ color: '#36caff' }}><Package size={60} /></div>
               )}
-              <div className="hero-stage-caption">
-                <span className="hero-live-dot"></span>
-                <strong>Daily essentials</strong>
-                <small>Delivered to your door</small>
-              </div>
             </div>
           </div>
         </section>
@@ -1522,21 +1312,21 @@ export default function LyfelyticEcommerce() {
           </div>
         )}
 
-        {/* Admin View */}
+        {/* ── ADMIN VIEW (STRICT MOBILE LAYOUT & ISOLATION) ── */}
         {isAdmin && (
           <div className="admin-panel">
-            <div className="admin-title"><Package size={22} /> Admin Panel</div>
+            <div className="admin-title"><Package size={20} /> Admin Dashboard</div>
             <div className="admin-tabs">
-              <button className={`admin-tab ${adminTab === 'products' ? 'active' : ''}`} onClick={() => setAdminTab('products')}><Package size={15} /> Products</button>
-              <button className={`admin-tab ${adminTab === 'orders' ? 'active' : ''}`} onClick={() => setAdminTab('orders')}><ClipboardList size={15} /> Orders {pendingOrders > 0 && <span style={{ background: '#24bfff', color: '#050608', borderRadius: 20, padding: '1px 7px', fontSize: 11 }}>{pendingOrders}</span>}</button>
-              <button className={`admin-tab ${adminTab === 'dashboard' ? 'active' : ''}`} onClick={() => setAdminTab('dashboard')}><BarChart2 size={15} /> Dashboard</button>
-              <button className={`admin-tab ${adminTab === 'categories' ? 'active' : ''}`} onClick={() => setAdminTab('categories')}><Filter size={15} /> Categories</button>
+              <button className={`admin-tab ${adminTab === 'products' ? 'active' : ''}`} onClick={() => setAdminTab('products')}><Package size={14} /> Products</button>
+              <button className={`admin-tab ${adminTab === 'orders' ? 'active' : ''}`} onClick={() => setAdminTab('orders')}><ClipboardList size={14} /> Orders {pendingOrders > 0 && <span style={{ background: '#24bfff', color: '#050608', borderRadius: 20, padding: '1px 6px', fontSize: 10 }}>{pendingOrders}</span>}</button>
+              <button className={`admin-tab ${adminTab === 'dashboard' ? 'active' : ''}`} onClick={() => setAdminTab('dashboard')}><BarChart2 size={14} /> Analytics</button>
+              <button className={`admin-tab ${adminTab === 'categories' ? 'active' : ''}`} onClick={() => setAdminTab('categories')}><Filter size={14} /> Categories</button>
             </div>
 
             {adminTab === 'products' && (
               <>
                 <div className="add-product-form">
-                  <div className="form-title"><Plus size={16} /> Add New Product</div>
+                  <div className="form-title"><Plus size={15} /> Add New Product</div>
                   <form onSubmit={handleAddProduct}>
                     <div className="form-grid">
                       <input type="text" placeholder="Product Name" value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} className="form-input" required />
@@ -1549,11 +1339,11 @@ export default function LyfelyticEcommerce() {
                     </div>
                     <label className="image-upload-area" style={{ marginBottom: 12 }}>
                       <input type="file" accept="image/*" multiple onChange={handleImagesUpload} disabled={newProduct.images.length >= 8} />
-                      <div className="upload-text"><Upload size={18} />{newProduct.images.length === 0 ? 'Upload images (select multiple)' : `Add more (${newProduct.images.length}/8)`}</div>
+                      <div className="upload-text"><Upload size={16} />{newProduct.images.length === 0 ? 'Upload images (select multiple)' : `Add more (${newProduct.images.length}/8)`}</div>
                       <div className="upload-hint">First image = main photo · Max 8</div>
                     </label>
                     {newProduct.images?.length > 0 && (
-                      <div className="image-preview">
+                      <div className="image-preview" style={{ marginBottom: 12 }}>
                         {newProduct.images.map((img, idx) => (
                           <div key={idx} className="preview-item">
                             <img src={img} alt="" />
@@ -1570,12 +1360,12 @@ export default function LyfelyticEcommerce() {
                   {products.map(product => (
                     <div key={product.id} className="product-management-card">
                       <div className="product-management-image"><img src={getThumb(product)} alt={product.name} /></div>
-                      <div style={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>{product.name}</div>
-                      <div style={{ color: '#24c9ff', fontWeight: 700, margin: '4px 0' }}>Rs.{product.price}</div>
-                      <div style={{ fontSize: 12, color: '#586678' }}>Stock: {product.stock} · {product.category}</div>
+                      <div style={{ color: '#fff', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.name}</div>
+                      <div style={{ color: '#24c9ff', fontWeight: 700, margin: '2px 0', fontSize: 13 }}>Rs.{product.price}</div>
+                      <div style={{ fontSize: 11, color: '#586678' }}>Stock: {product.stock} · {product.category}</div>
                       <div className="admin-card-actions">
-                        <button className="edit-btn" onClick={() => setEditingProduct({ ...product, images: product.images || [product.image] })}><Edit2 size={13} /> Edit</button>
-                        <button className="delete-btn" onClick={() => handleDeleteProduct(product.id)}><Trash2 size={13} /> Delete</button>
+                        <button className="edit-btn" onClick={() => setEditingProduct({ ...product, images: product.images || [product.image] })}><Edit2 size={12} /> Edit</button>
+                        <button className="delete-btn" onClick={() => handleDeleteProduct(product.id)}><Trash2 size={12} /> Delete</button>
                       </div>
                     </div>
                   ))}
@@ -1583,46 +1373,90 @@ export default function LyfelyticEcommerce() {
               </>
             )}
 
+            {/* ── ORDERS TAB WITH RESPONSIVE DISPLAY ── */}
             {adminTab === 'orders' && (
               <div className="orders-section">
-                <table className="orders-table">
-                  <thead>
-                    <tr><th>Customer</th><th>Items</th><th>Total</th><th>City</th><th>Date</th><th>Status</th></tr>
-                  </thead>
-                  <tbody>
-                    {orders.map(order => (
-                      <tr key={order.id}>
-                        <td><div style={{ color: '#fff', fontWeight: 600 }}>{order.customer_name}</div><div style={{ fontSize: 11 }}>{order.customer_phone}</div></td>
-                        <td>{order.items?.map(i => i.name).join(', ')}</td>
-                        <td style={{ color: '#24c9ff', fontWeight: 700 }}>Rs.{order.total_price}</td>
-                        <td>{order.customer_city}</td>
-                        <td>{new Date(order.created_at).toLocaleDateString()}</td>
-                        <td>
-                          <select className={`order-status-select ${getStatusClass(order.status)}`} value={order.status} onChange={e => updateOrderStatus(order.id, e.target.value)}>
-                            <option>Pending</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option>
-                          </select>
-                        </td>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 14 }}>Customer Orders ({orders.length})</div>
+                
+                {/* Desktop View Table */}
+                <div className="orders-desktop-container">
+                  <table className="orders-table">
+                    <thead>
+                      <tr>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>City</th>
+                        <th>Date</th>
+                        <th>Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {orders.map(order => (
+                        <tr key={order.id}>
+                          <td>
+                            <div style={{ color: '#fff', fontWeight: 600 }}>{order.customer_name}</div>
+                            <div style={{ fontSize: 11, color: '#586678' }}>{order.customer_phone}</div>
+                          </td>
+                          <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {order.items?.map(i => i.name).join(', ')}
+                          </td>
+                          <td style={{ color: '#24c9ff', fontWeight: 700, fontFamily: "'Space Grotesk', monospace" }}>Rs.{order.total_price}</td>
+                          <td>{order.customer_city}</td>
+                          <td>{new Date(order.created_at).toLocaleDateString()}</td>
+                          <td>
+                            <select className={`order-status-select ${getStatusClass(order.status)}`} value={order.status} onChange={e => updateOrderStatus(order.id, e.target.value)}>
+                              <option>Pending</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile View Cards */}
+                <div className="orders-mobile-list">
+                  {orders.map(order => (
+                    <div key={order.id} className="order-mobile-card">
+                      <div className="order-card-header">
+                        <div>
+                          <div className="order-card-title">{order.customer_name}</div>
+                          <div style={{ fontSize: 11, color: '#586678' }}>{order.customer_phone} · {order.customer_city}</div>
+                        </div>
+                        <div className="order-card-price">Rs.{order.total_price}</div>
+                      </div>
+                      <div className="order-card-details">
+                        <strong style={{ color: '#dce0e8' }}>Items:</strong> {order.items?.map(i => i.name).join(', ')}
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, paddingTop: 6, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                        <span style={{ fontSize: 11, color: '#586678' }}>{new Date(order.created_at).toLocaleDateString()}</span>
+                        <select className={`order-status-select ${getStatusClass(order.status)}`} value={order.status} onChange={e => updateOrderStatus(order.id, e.target.value)}>
+                          <option>Pending</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option>
+                        </select>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {orders.length === 0 && <div style={{ textAlign: 'center', padding: 24, color: '#586678', fontSize: 13 }}>No orders recorded yet.</div>}
               </div>
             )}
 
             {adminTab === 'dashboard' && (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
                   <div>
-                    <div style={{ color: '#fff', fontWeight: 700 }}>Dashboard Reset Settings</div>
-                    <div style={{ color: '#586678', fontSize: 12 }}>{resetMode === 'daily' ? 'Stats reset daily' : resetMode === 'monthly' ? 'Stats reset monthly' : `Stats since ${resetAt ? new Date(resetAt).toLocaleString() : 'beginning'}`}</div>
+                    <div style={{ color: '#fff', fontWeight: 700, fontSize: 14 }}>Dashboard Reset Settings</div>
+                    <div style={{ color: '#586678', fontSize: 11 }}>{resetMode === 'daily' ? 'Stats reset daily' : resetMode === 'monthly' ? 'Stats reset monthly' : `Stats since ${resetAt ? new Date(resetAt).toLocaleString() : 'beginning'}`}</div>
                   </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <select className="filter-select" value={resetMode} onChange={(e) => handleResetModeChange(e.target.value)}>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <select className="filter-select" style={{ fontSize: 11 }} value={resetMode} onChange={(e) => handleResetModeChange(e.target.value)}>
                       <option value="manual">Manual Reset</option>
                       <option value="daily">Reset Daily</option>
                       <option value="monthly">Reset Monthly</option>
                     </select>
-                    <button className="submit-btn" onClick={handleResetDashboard} disabled={resetLoading}>{resetLoading ? 'Resetting...' : 'Reset Now'}</button>
+                    <button className="submit-btn" style={{ padding: '6px 12px', fontSize: 11 }} onClick={handleResetDashboard} disabled={resetLoading}>{resetLoading ? 'Resetting...' : 'Reset Now'}</button>
                   </div>
                 </div>
                 <div className="dashboard-grid">
@@ -1637,17 +1471,20 @@ export default function LyfelyticEcommerce() {
             {adminTab === 'categories' && (
               <div>
                 <div className="add-product-form">
-                  <div className="form-title"><Plus size={16} /> Add Category</div>
-                  <form onSubmit={handleAddCategory} style={{ display: 'flex', gap: 10 }}>
-                    <input type="text" placeholder="Category name" value={newCategoryName} onChange={e => setNewCategoryName(e.target.value)} className="form-input" style={{ flex: 1 }} />
+                  <div className="form-title"><Plus size={15} /> Add Category</div>
+                  <form onSubmit={handleAddCategory} style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <input type="text" placeholder="Category name" value={newCategoryName} onChange={e => setNewCategoryName(e.target.value)} className="form-input" style={{ flex: 1, minWidth: 160 }} />
                     <button type="submit" className="submit-btn" disabled={savingCategory}>{savingCategory ? 'Saving...' : 'Add'}</button>
                   </form>
                 </div>
                 <div className="products-management-grid">
                   {categories.map(cat => (
                     <div key={cat} className="product-management-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div><div style={{ color: '#fff', fontWeight: 600 }}>{cat}</div><div style={{ fontSize: 12, color: '#586678' }}>{products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length} products</div></div>
-                      <button className="delete-btn" style={{ flex: 'none', padding: '6px 12px' }} onClick={() => handleDeleteCategory(cat)}><Trash2 size={13} /></button>
+                      <div>
+                        <div style={{ color: '#fff', fontWeight: 600, fontSize: 13 }}>{cat}</div>
+                        <div style={{ fontSize: 11, color: '#586678' }}>{products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length} products</div>
+                      </div>
+                      <button className="delete-btn" style={{ flex: 'none', padding: '6px 10px' }} onClick={() => handleDeleteCategory(cat)}><Trash2 size={12} /></button>
                     </div>
                   ))}
                 </div>

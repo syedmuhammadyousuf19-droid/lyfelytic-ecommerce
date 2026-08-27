@@ -13,8 +13,20 @@ const CATEGORIES = ['All', 'General', 'Kitchen', 'Bedroom', 'Bathroom', 'Office'
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body, #root { height: 100%; width: 100%; overflow-x: hidden; }
-  body { font-family: 'Manrope', sans-serif; background: #050608; color: var(--ink); }
+  
+  html {
+    scroll-behavior: smooth;
+    background: #050608;
+    overflow-x: clip;
+  }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: #050608;
+    color: #f7f9fc;
+    min-height: 100vh;
+    overflow-x: clip;
+  }
   
   :root {
     --bg: #050608;
@@ -39,14 +51,11 @@ const styles = `
     --my: 35vh;
   }
   
-  html { scroll-behavior: smooth; background: #050608; }
   button, input, select, textarea { font-family: 'Manrope', sans-serif; }
   
   .lyfelytic-container { 
     min-height: 100vh; 
     width: 100%; 
-    max-width: 100vw; 
-    overflow-x: hidden; 
     background: #050608; 
     position: relative; 
     isolation: isolate; 
@@ -74,7 +83,6 @@ const styles = `
     font-family: 'Space Grotesk', sans-serif; font-size: 20px; letter-spacing: .12em; text-transform: uppercase;
     background: linear-gradient(180deg,#fff,#8bdfff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
-  .brand p { display: none; }
   
   .nav-buttons { display: none; gap: 6px; align-items: center; }
   @media (min-width: 850px) { .nav-buttons { display: flex; } }
@@ -217,7 +225,7 @@ const styles = `
   .add-to-cart-btn:hover:not(:disabled) { background: #bdefff; }
   .add-to-cart-btn:disabled { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); cursor: not-allowed; }
 
-  /* ── ADMIN PANEL LAYOUT & RESPONSIVENESS FIX ── */
+  /* Admin Panel */
   .admin-panel { 
     background: #0a0f16; border-radius: 14px; padding: 20px; 
     border: 1px solid rgba(255,255,255,0.08); width: 100%; max-width: 100%; overflow: hidden;
@@ -253,7 +261,7 @@ const styles = `
   .edit-btn { background: rgba(36,201,255,0.15); color: #24c9ff; }
   .delete-btn { background: rgba(255,94,117,0.15); color: #ff5e75; }
 
-  /* ── ORDERS VIEW: MOBILE CARDS & DESKTOP TABLE ── */
+  /* Orders View */
   .orders-section { background: #070b10; border-radius: 12px; padding: 16px; border: 1px solid rgba(255,255,255,0.08); width: 100%; }
   .orders-desktop-container { width: 100%; overflow-x: auto; display: none; }
   @media (min-width: 768px) { .orders-desktop-container { display: block; } }
@@ -553,7 +561,7 @@ function ScrollProductStage() {
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-    applyProgress(0);
+    applyProgress(getProgress());
 
     let raf;
     function animate() {
@@ -1312,7 +1320,7 @@ export default function LyfelyticEcommerce() {
           </div>
         )}
 
-        {/* ── ADMIN VIEW (STRICT MOBILE LAYOUT & ISOLATION) ── */}
+        {/* Admin View */}
         {isAdmin && (
           <div className="admin-panel">
             <div className="admin-title"><Package size={20} /> Admin Dashboard</div>
@@ -1373,7 +1381,6 @@ export default function LyfelyticEcommerce() {
               </>
             )}
 
-            {/* ── ORDERS TAB WITH RESPONSIVE DISPLAY ── */}
             {adminTab === 'orders' && (
               <div className="orders-section">
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 14 }}>Customer Orders ({orders.length})</div>

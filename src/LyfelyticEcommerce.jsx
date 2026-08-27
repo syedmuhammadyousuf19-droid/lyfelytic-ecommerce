@@ -318,7 +318,6 @@ const styles = `
   .footer { background: #030508; border-top: 1px solid rgba(255,255,255,.08); color: #738095; padding: 45px 20px; text-align: center; }
   .footer p { margin: 6px 0; font-size: 13px; }
 
-  /* Desktop Two Column Split */
   @media (min-width: 900px) {
     .product-page { display: grid; grid-template-columns: 1.15fr .85fr; align-items: start; min-height: calc(100vh - 70px); }
     .product-page-back { grid-column: 1 / -1; }
@@ -341,12 +340,12 @@ const styles = `
   }
 `;
 
-/* ─── SCROLL-DRIVEN 3D MAKEUP STAGE ─── */
+/* ─── MAKEUP BOX UNBOXING 3D STAGE (CROSS-DEVICE OPTIMIZED) ─── */
 const SCENES = [
-  { eyebrow: 'THE COLLECTION · MADE FOR DAILY LIFE', title: 'Beauty, assembled.', body: '' },
-  { eyebrow: '', title: 'Every piece, considered.', body: 'From lip to finish — curated essentials that hold up to daily use.' },
-  { eyebrow: '', title: 'Cash on delivery. Always.', body: 'Shop with confidence — pay only when it arrives at your door.' },
-  { eyebrow: '', title: 'Your daily edit awaits.', body: 'Explore the full collection below.' }
+  { eyebrow: 'THE UNBOXING EXPERIENCE', title: 'Beauty, Unboxed.', body: 'Watch the curated kit land and open with precision.' },
+  { eyebrow: 'PRECISION CRAFTED', title: 'Every Piece, Revealed.', body: 'Essentials emerge and align into your personalized vanity display.' },
+  { eyebrow: 'CASH ON DELIVERY', title: 'Arrives at Your Door.', body: 'Pay with complete peace of mind when it reaches you.' },
+  { eyebrow: 'READY TO EXPLORE', title: 'Your Daily Edit Awaits.', body: 'Scroll down to shop the full collection.' }
 ];
 
 function ScrollProductStage() {
@@ -364,163 +363,213 @@ function ScrollProductStage() {
     if (!canvas || !stickyEl || !stageEl) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    camera.position.set(0, 0.2, 8.5);
+
+    const rootRig = new THREE.Group();
+    scene.add(rootRig);
 
     function sizeRenderer() {
-      const w = stickyEl.clientWidth, h = stickyEl.clientHeight;
+      const w = stickyEl.clientWidth;
+      const h = stickyEl.clientHeight;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
+
+      // Smart viewport scaling: adapts dynamically across phones & desktop
+      const isMobile = w < 768;
+      const isNarrow = w < 420;
+      const scale = isNarrow ? 0.52 : isMobile ? 0.62 : 1.0;
+      rootRig.scale.set(scale, scale, scale);
+      camera.position.set(0, isMobile ? 0.7 : 0.9, isNarrow ? 11.5 : isMobile ? 10.2 : 8.5);
+
       camera.updateProjectionMatrix();
     }
     sizeRenderer();
     window.addEventListener('resize', sizeRenderer);
 
-    scene.add(new THREE.AmbientLight(0xbfe9ff, 0.55));
-    const key = new THREE.DirectionalLight(0xffffff, 1.15);
-    key.position.set(4, 6, 5);
+    // Studio Lights
+    scene.add(new THREE.AmbientLight(0xbfe9ff, 0.75));
+    const key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.position.set(4, 8, 5);
     scene.add(key);
-    const tealLight = new THREE.PointLight(0x24c9ff, 1.4, 24);
-    tealLight.position.set(-3.5, 1.5, 4);
+
+    const tealLight = new THREE.PointLight(0x24c9ff, 2.0, 25);
+    tealLight.position.set(-3.5, 2, 4);
     scene.add(tealLight);
-    const coralLight = new THREE.PointLight(0xff6b4a, 0.65, 24);
-    coralLight.position.set(3.5, -1.5, -3);
+
+    const coralLight = new THREE.PointLight(0xff6b4a, 1.2, 25);
+    coralLight.position.set(3.5, -1, -2);
     scene.add(coralLight);
 
-    const rig = new THREE.Group();
-    scene.add(rig);
-    rig.rotation.x = 0.06;
-    rig.scale.setScalar(1.15);
+    // ── 1. THE MAKEUP KIT (BOX + HINGED LID) ──
+    const kitGroup = new THREE.Group();
+    rootRig.add(kitGroup);
 
+    const boxBase = new THREE.Mesh(
+      new THREE.BoxGeometry(3.0, 0.45, 2.1),
+      new THREE.MeshStandardMaterial({ color: 0x090d14, roughness: 0.3, metalness: 0.6 })
+    );
+    boxBase.position.y = -0.25;
+
+    const boxInner = new THREE.Mesh(
+      new THREE.BoxGeometry(2.8, 0.4, 1.9),
+      new THREE.MeshStandardMaterial({ color: 0x16202e, roughness: 0.5, metalness: 0.2 })
+    );
+    boxInner.position.y = -0.2;
+
+    const trim = new THREE.Mesh(
+      new THREE.BoxGeometry(3.04, 0.05, 2.14),
+      new THREE.MeshStandardMaterial({ color: 0x24c9ff, roughness: 0.2, metalness: 0.85 })
+    );
+    trim.position.y = 0.01;
+    kitGroup.add(boxBase, boxInner, trim);
+
+    const lidHinge = new THREE.Group();
+    lidHinge.position.set(0, 0.02, -1.05);
+    const lidMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(3.02, 0.08, 2.12),
+      new THREE.MeshStandardMaterial({ color: 0x0c121c, roughness: 0.25, metalness: 0.7 })
+    );
+    lidMesh.position.set(0, 0.04, 1.05);
+
+    const mirror = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.6, 1.7),
+      new THREE.MeshStandardMaterial({ color: 0xa9dcff, roughness: 0.05, metalness: 0.95 })
+    );
+    mirror.position.set(0, 0.01, 1.05);
+    mirror.rotation.x = Math.PI / 2;
+
+    lidHinge.add(lidMesh, mirror);
+    kitGroup.add(lidHinge);
+
+    // ── 2. MAKEUP ITEMS (SAFE-MARGIN SPACING) ──
     const items = [];
-    function addItem(mesh, finalPos, finalRotY = 0, upFrom) {
-      const scatterX = finalPos.x + (Math.random() - 0.5) * 4.2;
-      const scatterY = finalPos.y + (upFrom ?? 2.8 + Math.random() * 1.4);
-      const scatterZ = finalPos.z + (Math.random() - 0.5) * 3.2;
-      mesh.position.set(scatterX, scatterY, scatterZ);
-      mesh.rotation.y = (Math.random() - 0.5) * Math.PI;
-      mesh.userData = { finalPos, finalRotY, scatterX, scatterY, scatterZ, startRotY: mesh.rotation.y };
-
-      mesh.traverse((child) => {
-        if (child.isMesh) {
-          child.material = child.material.clone();
-          child.material.transparent = true;
-          child.material.opacity = 0;
-        }
-      });
-      rig.add(mesh);
+    function registerItem(mesh, finalPos, finalRot, startPos) {
+      mesh.position.copy(startPos);
+      mesh.scale.set(0.01, 0.01, 0.01);
+      mesh.userData = { finalPos, finalRot, startPos };
+      rootRig.add(mesh);
       items.push(mesh);
       return mesh;
     }
 
-    function setOpacity(mesh, v) {
-      mesh.traverse((child) => {
-        if (child.isMesh) child.material.opacity = v;
-      });
-    }
-
-    // 1. Lipstick
+    // Lipstick (Left)
     const lipGroup = new THREE.Group();
     lipGroup.add(
       new THREE.Mesh(
-        new THREE.CylinderGeometry(0.26, 0.26, 1.25, 32),
+        new THREE.CylinderGeometry(0.18, 0.18, 0.95, 32),
         new THREE.MeshStandardMaterial({ color: 0x111318, roughness: 0.25, metalness: 0.6 })
       )
     );
     const lipBullet = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.19, 0.23, 0.55, 32),
+      new THREE.CylinderGeometry(0.14, 0.16, 0.42, 32),
       new THREE.MeshStandardMaterial({ color: 0xff6b4a, roughness: 0.35, metalness: 0.1 })
     );
-    lipBullet.position.y = 0.88;
+    lipBullet.position.y = 0.66;
     lipGroup.add(lipBullet);
-    addItem(lipGroup, new THREE.Vector3(-2.05, -0.1, 0.5), 0.35);
+    registerItem(lipGroup, new THREE.Vector3(-1.25, -0.22, 0.85), new THREE.Vector3(0, 0.4, 0), new THREE.Vector3(-0.35, -0.1, 0));
 
-    // 2. Compact Powder
+    // Compact Powder (Center-Left)
     const compactGroup = new THREE.Group();
-    const compactBase = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.9, 0.9, 0.2, 48),
+    const compactBaseMesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.58, 0.58, 0.15, 48),
       new THREE.MeshStandardMaterial({ color: 0x0d1219, roughness: 0.3, metalness: 0.4 })
     );
-    const compactRim = new THREE.Mesh(
-      new THREE.TorusGeometry(0.9, 0.028, 16, 48),
+    const compactRimMesh = new THREE.Mesh(
+      new THREE.TorusGeometry(0.58, 0.02, 16, 48),
       new THREE.MeshStandardMaterial({ color: 0x24c9ff, roughness: 0.15, metalness: 0.85 })
     );
-    compactRim.rotation.x = Math.PI / 2;
-    compactRim.position.y = 0.1;
-    compactGroup.add(compactBase, compactRim);
-    addItem(compactGroup, new THREE.Vector3(0.5, -0.55, -0.6), 0);
+    compactRimMesh.rotation.x = Math.PI / 2;
+    compactRimMesh.position.y = 0.07;
+    compactGroup.add(compactBaseMesh, compactRimMesh);
+    registerItem(compactGroup, new THREE.Vector3(-0.42, -0.52, 0.95), new THREE.Vector3(0.25, 0, 0), new THREE.Vector3(0, -0.1, 0));
 
-    // 3. Perfume Bottle
+    // Perfume Bottle (Right)
     const perfumeGroup = new THREE.Group();
     const bottleBody = new THREE.Mesh(
-      new THREE.BoxGeometry(0.68, 1.05, 0.4),
+      new THREE.BoxGeometry(0.5, 0.8, 0.32),
       new THREE.MeshPhysicalMaterial({
-        color: 0x19bfff, roughness: 0.08, transmission: 0.55,
+        color: 0x19bfff, roughness: 0.08, transmission: 0.65,
         thickness: 0.6, metalness: 0, ior: 1.3
       })
     );
     const bottleCap = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.17, 0.17, 0.32, 24),
-      new THREE.MeshStandardMaterial({ color: 0x0a0d12, roughness: 0.3, metalness: 0.7 })
+      new THREE.CylinderGeometry(0.13, 0.13, 0.24, 24),
+      new THREE.MeshStandardMaterial({ color: 0x0a0d12, roughness: 0.3, metalness: 0.8 })
     );
-    bottleCap.position.y = 0.68;
+    bottleCap.position.y = 0.52;
     perfumeGroup.add(bottleBody, bottleCap);
-    addItem(perfumeGroup, new THREE.Vector3(1.95, 0.05, 0.35), -0.22);
+    registerItem(perfumeGroup, new THREE.Vector3(1.25, -0.22, 0.75), new THREE.Vector3(0, -0.35, 0), new THREE.Vector3(0.45, -0.1, 0));
 
-    // 4. Makeup Brush
+    // Makeup Brush (Center-Right)
     const brushGroup = new THREE.Group();
     const handle = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.055, 0.075, 1.55, 20),
+      new THREE.CylinderGeometry(0.04, 0.06, 1.25, 20),
       new THREE.MeshStandardMaterial({ color: 0x0a0d12, roughness: 0.35, metalness: 0.4 })
     );
     const ferrule = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.09, 0.09, 0.18, 20),
+      new THREE.CylinderGeometry(0.07, 0.07, 0.15, 20),
       new THREE.MeshStandardMaterial({ color: 0x24c9ff, roughness: 0.2, metalness: 0.8 })
     );
-    ferrule.position.y = 0.78;
+    ferrule.position.y = 0.62;
     const bristles = new THREE.Mesh(
-      new THREE.ConeGeometry(0.21, 0.5, 24),
-      new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.85 })
+      new THREE.ConeGeometry(0.16, 0.38, 24),
+      new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.85 })
     );
-    bristles.position.y = 1.1;
+    bristles.position.y = 0.88;
     brushGroup.add(handle, ferrule, bristles);
-    brushGroup.rotation.z = 0.45;
-    addItem(brushGroup, new THREE.Vector3(-0.55, 1.05, -0.85), 0.55, 3.4);
+    registerItem(brushGroup, new THREE.Vector3(0.45, 0.12, 0.95), new THREE.Vector3(0.1, 0.2, -0.35), new THREE.Vector3(0.18, -0.1, 0.1));
 
+    // Scroll Logic
     let ticking = false;
     function getProgress() {
-      const wrapper = stageEl;
-      const rect = wrapper.getBoundingClientRect();
-      const total = wrapper.offsetHeight - stickyEl.clientHeight;
+      const rect = stageEl.getBoundingClientRect();
+      const total = stageEl.offsetHeight - stickyEl.clientHeight;
       if (total <= 0) return 0;
       return Math.min(1, Math.max(0, -rect.top / total));
     }
 
-    function ease(t) {
-      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    function smooth(t) {
+      return t * t * (3 - 2 * t);
     }
 
-    const sceneCount = SCENES.length;
-
     function applyProgress(p) {
-      const e = ease(p);
+      // 1. Box Drops & Lands (0.0 -> 0.3)
+      const pDrop = Math.min(1, Math.max(0, p / 0.3));
+      const eDrop = smooth(pDrop);
+      kitGroup.position.y = THREE.MathUtils.lerp(5.0, -0.6, eDrop);
+      kitGroup.position.z = THREE.MathUtils.lerp(-2.5, 0, eDrop);
+      kitGroup.rotation.x = THREE.MathUtils.lerp(0.4, 0.15, eDrop);
 
-      items.forEach((mesh, i) => {
-        const local = Math.min(1, Math.max(0, (e - i * 0.05) / 0.65));
-        const { finalPos, finalRotY, scatterX, scatterY, scatterZ, startRotY } = mesh.userData;
-        mesh.position.x = THREE.MathUtils.lerp(scatterX, finalPos.x, local);
-        mesh.position.y = THREE.MathUtils.lerp(scatterY, finalPos.y, local);
-        mesh.position.z = THREE.MathUtils.lerp(scatterZ, finalPos.z, local);
-        mesh.rotation.y = THREE.MathUtils.lerp(startRotY, finalRotY, local);
-        setOpacity(mesh, local);
+      // 2. Box Lid Opens (0.28 -> 0.55)
+      const pLid = Math.min(1, Math.max(0, (p - 0.28) / 0.27));
+      const eLid = smooth(pLid);
+      lidHinge.rotation.x = THREE.MathUtils.lerp(0, -1.9, eLid);
+
+      // 3. Items Pop Out & Settle (0.50 -> 0.95)
+      items.forEach((item, idx) => {
+        const itemDelay = 0.50 + idx * 0.07;
+        const pItem = Math.min(1, Math.max(0, (p - itemDelay) / 0.35));
+        const eItem = smooth(pItem);
+
+        const arcY = Math.sin(eItem * Math.PI) * 1.3;
+        item.position.x = THREE.MathUtils.lerp(item.userData.startPos.x, item.userData.finalPos.x, eItem);
+        item.position.y = THREE.MathUtils.lerp(item.userData.startPos.y, item.userData.finalPos.y, eItem) + arcY;
+        item.position.z = THREE.MathUtils.lerp(item.userData.startPos.z, item.userData.finalPos.z, eItem);
+
+        const scaleVal = THREE.MathUtils.lerp(0.01, 1, eItem);
+        item.scale.set(scaleVal, scaleVal, scaleVal);
+
+        item.rotation.x = THREE.MathUtils.lerp(Math.PI / 2, item.userData.finalRot.x, eItem);
+        item.rotation.y = THREE.MathUtils.lerp(0, item.userData.finalRot.y, eItem);
+        item.rotation.z = THREE.MathUtils.lerp(0, item.userData.finalRot.z, eItem);
       });
 
-      rig.rotation.y = THREE.MathUtils.lerp(-0.5, 0.35, e);
-      camera.position.z = THREE.MathUtils.lerp(9.5, 6.8, e);
-      camera.position.y = THREE.MathUtils.lerp(0.4, 0, e);
+      rootRig.rotation.y = THREE.MathUtils.lerp(-0.25, 0.2, smooth(p));
 
+      // Captions Transition
+      const sceneCount = SCENES.length;
       const segment = 1 / sceneCount;
       const activeIdx = Math.min(sceneCount - 1, Math.floor(p / segment));
       sceneElsRef.current.forEach((el, i) => {
@@ -552,7 +601,7 @@ function ScrollProductStage() {
     let raf;
     function animate() {
       raf = requestAnimationFrame(animate);
-      if (!reduceMotion) rig.rotation.y += 0.0008;
+      if (!reduceMotion) rootRig.rotation.y += 0.0004;
       renderer.render(scene, camera);
     }
     animate();
@@ -566,7 +615,7 @@ function ScrollProductStage() {
   }, []);
 
   return (
-    <section ref={stageRef} style={{ position: 'relative', height: '380vh' }}>
+    <section ref={stageRef} style={{ position: 'relative', height: '400vh' }}>
       <style>{`
         .spstage-sticky{position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden;
           background:radial-gradient(ellipse at 50% 30%, rgba(36,201,255,0.13), transparent 60%),
@@ -577,10 +626,10 @@ function ScrollProductStage() {
           opacity:0;transition:opacity .35s ease, transform .35s ease;will-change:opacity,transform;}
         .spstage-eyebrow{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:2px;
           text-transform:uppercase;color:#54d8ff;margin-bottom:16px;}
-        .spstage-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,5.5vw,64px);
+        .spstage-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,5vw,58px);
           line-height:1.05;letter-spacing:-.03em;color:#f7f9fc;margin-bottom:14px;text-wrap:balance;}
-        .spstage-body{font-family:'Manrope',sans-serif;color:#8c9aac;font-size:15px;line-height:1.7;
-          max-width:460px;}
+        .spstage-body{font-family:'Manrope',sans-serif;color:#8c9aac;font-size:14px;line-height:1.7;
+          max-width:440px;}
         .spstage-progress{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
           display:flex;gap:8px;z-index:3;}
         .spstage-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);
@@ -592,7 +641,7 @@ function ScrollProductStage() {
       `}</style>
       <div ref={stickyRef} className="spstage-sticky">
         <canvas ref={canvasRef} className="spstage-canvas" />
-        <div className="spstage-hint">Scroll</div>
+        <div className="spstage-hint">Scroll down to unbox</div>
         {SCENES.map((s, i) => (
           <div
             key={i}
@@ -1187,7 +1236,7 @@ export default function LyfelyticEcommerce() {
         </div>
       </header>
 
-      {/* 3D Scroll Stage — Plays before hero in shop view */}
+      {/* 3D Makeup Unboxing Stage */}
       {!isAdmin && view === 'shop' && (
         <ScrollProductStage />
       )}
@@ -1400,7 +1449,7 @@ export default function LyfelyticEcommerce() {
                       <div className="upload-text"><Upload size={18} />{newProduct.images.length === 0 ? 'Upload images (select multiple)' : `Add more (${newProduct.images.length}/8)`}</div>
                       <div className="upload-hint">First image = main photo · Max 8</div>
                     </label>
-                    {newProduct.images.length > 0 && (
+                    {newProduct.images?.length > 0 && (
                       <div className="image-preview">
                         {newProduct.images.map((img, idx) => (
                           <div key={idx} className="preview-item">

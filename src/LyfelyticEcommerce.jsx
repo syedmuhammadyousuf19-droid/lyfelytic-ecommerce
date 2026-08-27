@@ -362,7 +362,6 @@ function ScrollProductStage() {
     const stageEl = stageRef.current;
     if (!canvas || !stickyEl || !stageEl) return;
 
-    // High quality WebGL Renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
@@ -375,7 +374,6 @@ function ScrollProductStage() {
     const rootRig = new THREE.Group();
     scene.add(rootRig);
 
-    // Responsive Canvas Resizing & Camera Placement
     function sizeRenderer() {
       const w = stickyEl.clientWidth;
       const h = stickyEl.clientHeight;
@@ -385,7 +383,6 @@ function ScrollProductStage() {
       const isMobile = w < 768;
       const isNarrow = w < 440;
       
-      // Proportional scale on mobile vs desktop
       const scale = isNarrow ? 0.68 : isMobile ? 0.78 : 1.05;
       rootRig.scale.set(scale, scale, scale);
       
@@ -395,11 +392,10 @@ function ScrollProductStage() {
     sizeRenderer();
     window.addEventListener('resize', sizeRenderer);
 
-    // ── STUDIO LIGHTING & REFLECTIONS ──
+    // Studio Lights
     const ambient = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambient);
 
-    // Key Spotlight (Soft Cast Shadow)
     const keySpot = new THREE.SpotLight(0xffffff, 3.2, 30, Math.PI / 4, 0.4, 1.2);
     keySpot.position.set(3.5, 9, 6);
     keySpot.castShadow = true;
@@ -408,7 +404,6 @@ function ScrollProductStage() {
     keySpot.shadow.bias = -0.0008;
     scene.add(keySpot);
 
-    // Rim Lights (Cyan / Rose-Coral luxury edge sheen)
     const tealRim = new THREE.PointLight(0x24c9ff, 3.0, 20);
     tealRim.position.set(-5, 2.5, 3.5);
     scene.add(tealRim);
@@ -421,21 +416,14 @@ function ScrollProductStage() {
     warmFill.position.set(-3, -2, 5);
     scene.add(warmFill);
 
-    // ── LUXURY MATERIAL DEFINITIONS ──
+    // Luxury Material Definitions
     const goldMat = new THREE.MeshStandardMaterial({
       color: 0xdfb76c, roughness: 0.18, metalness: 0.94
-    });
-    const chromeMat = new THREE.MeshStandardMaterial({
-      color: 0x24c9ff, roughness: 0.12, metalness: 0.88
     });
     const obsidianMat = new THREE.MeshPhysicalMaterial({
       color: 0x080c14, roughness: 0.28, metalness: 0.35, clearcoat: 0.85, clearcoatRoughness: 0.12
     });
-    const matteRubberMat = new THREE.MeshStandardMaterial({
-      color: 0x0c1118, roughness: 0.55, metalness: 0.1
-    });
 
-    // Vanity Shadow Base Plate
     const shadowPlate = new THREE.Mesh(
       new THREE.CircleGeometry(3.6, 64),
       new THREE.ShadowMaterial({ opacity: 0.35 })
@@ -445,11 +433,10 @@ function ScrollProductStage() {
     shadowPlate.receiveShadow = true;
     rootRig.add(shadowPlate);
 
-    // ── 1. THE MAKEUP KIT (BOX + HINGED MIRROR LID) ──
+    // 1. Box Body
     const kitGroup = new THREE.Group();
     rootRig.add(kitGroup);
 
-    // Box Body
     const boxBase = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.45, 2.2), obsidianMat);
     boxBase.position.y = -0.25;
     boxBase.castShadow = true;
@@ -488,7 +475,7 @@ function ScrollProductStage() {
     lidHinge.add(lidMesh, lidGoldTrim, mirrorGlass);
     kitGroup.add(lidHinge);
 
-    // ── 2. REALISTIC MAKEUP PRODUCTS ──
+    // 2. Realistic Makeup Products
     const items = [];
     function registerItem(mesh, finalPos, finalRot, startPos) {
       mesh.position.copy(startPos);
@@ -505,13 +492,12 @@ function ScrollProductStage() {
       return mesh;
     }
 
-    // 💄 A. REAL LIPSTICK (Slanted tip + Gold chamber + Obsidian case)
+    // Lipstick
     const lipGroup = new THREE.Group();
     const lipBaseTube = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.75, 48), obsidianMat);
     const lipGoldChamber = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.21, 0.45, 48), goldMat);
     lipGoldChamber.position.y = 0.5;
 
-    // Realistic bullet with angled cut
     const lipBulletGeom = new THREE.CylinderGeometry(0.18, 0.19, 0.55, 48);
     const pos = lipBulletGeom.attributes.position;
     for (let i = 0; i < pos.count; i++) {
@@ -530,7 +516,7 @@ function ScrollProductStage() {
     lipGroup.add(lipBaseTube, lipGoldChamber, lipBulletMesh);
     registerItem(lipGroup, new THREE.Vector3(-1.45, -0.35, 1.05), new THREE.Vector3(0.05, 0.35, 0), new THREE.Vector3(-0.4, -0.1, 0));
 
-    // 🪞 B. LUXURY COMPACT POWDER (Domed powder pan + Gold rim)
+    // Compact Powder
     const compactGroup = new THREE.Group();
     const compactCase = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.72, 0.16, 64), obsidianMat);
     const compactGoldRing = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.024, 24, 64), goldMat);
@@ -546,7 +532,7 @@ function ScrollProductStage() {
     compactGroup.add(compactCase, compactGoldRing, powderPan);
     registerItem(compactGroup, new THREE.Vector3(-0.48, -0.72, 1.25), new THREE.Vector3(0.28, 0.05, 0), new THREE.Vector3(0, -0.1, 0));
 
-    // 🧴 C. FROSTED PERFUME BOTTLE (Refractive Glass + Atomizer + Teal Fragrance)
+    // Perfume Bottle
     const perfumeGroup = new THREE.Group();
     const glassMat = new THREE.MeshPhysicalMaterial({
       color: 0x76ddff,
@@ -559,7 +545,6 @@ function ScrollProductStage() {
     });
     const bottleBody = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.92, 0.42), glassMat);
     
-    // Internal liquid core
     const perfumeLiquid = new THREE.Mesh(
       new THREE.BoxGeometry(0.52, 0.72, 0.32),
       new THREE.MeshStandardMaterial({ color: 0x19bfff, roughness: 0.2, metalness: 0.1, transparent: true, opacity: 0.75 })
@@ -575,7 +560,7 @@ function ScrollProductStage() {
     perfumeGroup.add(bottleBody, perfumeLiquid, goldNeck, goldCap);
     registerItem(perfumeGroup, new THREE.Vector3(1.42, -0.32, 0.95), new THREE.Vector3(0, -0.35, 0), new THREE.Vector3(0.5, -0.1, 0));
 
-    // 🖌️ D. MAKEUP BRUSH (Turned wood handle + Gold ferrule + Flared soft bristles)
+    // Makeup Brush
     const brushGroup = new THREE.Group();
     const handleMat = new THREE.MeshStandardMaterial({ color: 0x12161f, roughness: 0.3, metalness: 0.2 });
     const brushHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.065, 1.4, 32), handleMat);
@@ -592,7 +577,6 @@ function ScrollProductStage() {
     brushGroup.add(brushHandle, brushFerrule, bristles);
     registerItem(brushGroup, new THREE.Vector3(0.52, 0.08, 1.15), new THREE.Vector3(0.15, 0.18, -0.35), new THREE.Vector3(0.2, -0.1, 0.1));
 
-    // ── PROGRESS SCRUBBER ──
     let ticking = false;
     function getProgress() {
       const rect = stageEl.getBoundingClientRect();
@@ -606,19 +590,19 @@ function ScrollProductStage() {
     }
 
     function applyProgress(p) {
-      // Phase 1: Box Falls & Lands With Momentum (0.0 -> 0.32)
+      // Box drop
       const pDrop = Math.min(1, Math.max(0, p / 0.32));
       const eDrop = smooth(pDrop);
       kitGroup.position.y = THREE.MathUtils.lerp(5.2, -0.65, eDrop);
       kitGroup.position.z = THREE.MathUtils.lerp(-2.2, 0, eDrop);
       kitGroup.rotation.x = THREE.MathUtils.lerp(0.45, 0.14, eDrop);
 
-      // Phase 2: Box Lid Opens (0.28 -> 0.58)
+      // Lid opening
       const pLid = Math.min(1, Math.max(0, (p - 0.28) / 0.30));
       const eLid = smooth(pLid);
       lidHinge.rotation.x = THREE.MathUtils.lerp(0, -1.95, eLid);
 
-      // Phase 3: Items Emerge, Arc & Settle (0.48 -> 0.96)
+      // Items emergence
       items.forEach((item, idx) => {
         const itemDelay = 0.48 + idx * 0.07;
         const pItem = Math.min(1, Math.max(0, (p - itemDelay) / 0.38));
@@ -639,7 +623,6 @@ function ScrollProductStage() {
 
       rootRig.rotation.y = THREE.MathUtils.lerp(-0.25, 0.2, smooth(p));
 
-      // Captions & Progress Dots Synchronisation
       const sceneCount = SCENES.length;
       const segment = 1 / sceneCount;
       const activeIdx = Math.min(sceneCount - 1, Math.floor(p / segment));
@@ -958,6 +941,9 @@ export default function LyfelyticEcommerce() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Reference for smooth jump straight to product catalog
+  const productsSectionRef = useRef(null);
+
   const openProduct = (product) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     document.documentElement.scrollTop = 0;
@@ -1058,12 +1044,22 @@ export default function LyfelyticEcommerce() {
   };
 
   const handleDeleteCategory = async (name) => {
-    const inUse = products.some(p => p.category === name);
+    const inUse = products.some(p => p.category?.toLowerCase() === name.toLowerCase());
     if (inUse && !confirm(`"${name}" is used by products. Delete anyway?`)) return;
     if (!inUse && !confirm(`Delete category "${name}"?`)) return;
     const { error } = await supabase.from('categories').delete().eq('name', name);
     if (error) { alert('Failed to delete category'); return; }
-    setCategories(prev => prev.filter(c => c !== name));
+    setCategories(prev => prev.filter(c => c.toLowerCase() !== name.toLowerCase()));
+  };
+
+  const selectCategoryAndScroll = (cat) => {
+    setSelectedCategory(cat);
+    setSearchQuery('');
+    setTimeout(() => {
+      if (productsSectionRef.current) {
+        productsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   };
 
   const getThumb = (p) => p.images?.[0] || p.image || '';
@@ -1077,9 +1073,10 @@ export default function LyfelyticEcommerce() {
     localStorage.setItem('lyf_wishlist', JSON.stringify(updated));
   };
 
+  // Robust Case-Insensitive Filtering
   const filteredProducts = products.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchCat = selectedCategory === 'All' || p.category === selectedCategory;
+    const matchSearch = p.name?.toLowerCase().includes(searchQuery.toLowerCase()) || p.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchCat = selectedCategory === 'All' || p.category?.toLowerCase() === selectedCategory.toLowerCase();
     const matchPrice = priceRange === 'all' ? true :
       priceRange === 'under500' ? p.price < 500 :
       priceRange === '500-1000' ? p.price >= 500 && p.price <= 1000 :
@@ -1340,7 +1337,7 @@ export default function LyfelyticEcommerce() {
               <h1 className="hero-title">Everything you need,<br /><span className="hero-accent">every single day.</span></h1>
               <p className="hero-sub">Shop daily life accessories — from beauty to home essentials — delivered right to your door. No card needed, pay on arrival.</p>
               <div className="hero-actions">
-                <button className="hero-primary-btn" onClick={() => window.scrollTo({ top: 900, behavior: 'smooth' })}>Shop Now <ChevronRight size={17} /></button>
+                <button className="hero-primary-btn" onClick={() => selectCategoryAndScroll('All')}>Shop Now <ChevronRight size={17} /></button>
                 <span className="hero-trust"><span className="hero-trust-dot"></span> Premium products · Fast delivery</span>
               </div>
             </div>
@@ -1381,9 +1378,9 @@ export default function LyfelyticEcommerce() {
           </div>
           <div className="category-showcase-grid">
             {categories.slice(0, 4).map((cat, index) => {
-              const categoryProduct = products.find(p => p.category === cat);
+              const categoryProduct = products.find(p => p.category?.toLowerCase() === cat.toLowerCase());
               return (
-                <button key={cat} className="category-showcase-card" onClick={() => { setSelectedCategory(cat); window.scrollTo({ top: 1100, behavior: 'smooth' }); }}>
+                <button key={cat} className="category-showcase-card" onClick={() => selectCategoryAndScroll(cat)}>
                   {categoryProduct && <img src={getThumb(categoryProduct)} alt="" />}
                   <span className="category-card-overlay"></span>
                   <span className="category-card-content"><small>0{index + 1}</small><strong>{cat}</strong><em>Explore <ChevronRight size={14} /></em></span>
@@ -1406,7 +1403,15 @@ export default function LyfelyticEcommerce() {
           </div>
           <div className="filter-bar">
             <div className="category-chips">
-              {['All', ...categories].map(cat => <button key={cat} className={`chip ${selectedCategory === cat ? 'active' : ''}`} onClick={() => setSelectedCategory(cat)}>{cat}</button>)}
+              {['All', ...categories].map(cat => (
+                <button
+                  key={cat}
+                  className={`chip ${selectedCategory.toLowerCase() === cat.toLowerCase() ? 'active' : ''}`}
+                  onClick={() => selectCategoryAndScroll(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
             <div className="filter-selects">
               <select className="filter-select" value={priceRange} onChange={e => setPriceRange(e.target.value)}>
@@ -1466,17 +1471,26 @@ export default function LyfelyticEcommerce() {
         {/* Shop View */}
         {!isAdmin && view === 'shop' && (
           <div>
-            <div className="section-title products-section-title">
+            <div
+              ref={productsSectionRef}
+              className="section-title products-section-title"
+              style={{ scrollMarginTop: '90px' }}
+            >
               <div>
                 <span className="section-kicker">THE COLLECTION</span>
-                <h2>Featured essentials</h2>
+                <h2>{selectedCategory === 'All' ? 'Featured essentials' : `${selectedCategory} Collection`}</h2>
               </div>
               <p>{filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} available</p>
             </div>
             <div className="products-container">
               <div>
                 {loading && <p style={{ textAlign: 'center', padding: 20, color: '#8794a6' }}>Loading products...</p>}
-                {!loading && filteredProducts.length === 0 && <p style={{ textAlign: 'center', padding: 20, color: '#586678' }}>No products found.</p>}
+                {!loading && filteredProducts.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                    <p style={{ color: '#8794a6', marginBottom: 12 }}>No products found in "{selectedCategory}".</p>
+                    <button className="submit-btn" onClick={() => selectCategoryAndScroll('All')}>View All Products</button>
+                  </div>
+                )}
                 <div className="products-grid">
                   {filteredProducts.map((product, i) => (
                     <Reveal key={product.id} delay={(i % 6) * 60}>
@@ -1632,7 +1646,7 @@ export default function LyfelyticEcommerce() {
                 <div className="products-management-grid">
                   {categories.map(cat => (
                     <div key={cat} className="product-management-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div><div style={{ color: '#fff', fontWeight: 600 }}>{cat}</div><div style={{ fontSize: 12, color: '#586678' }}>{products.filter(p => p.category === cat).length} products</div></div>
+                      <div><div style={{ color: '#fff', fontWeight: 600 }}>{cat}</div><div style={{ fontSize: 12, color: '#586678' }}>{products.filter(p => p.category?.toLowerCase() === cat.toLowerCase()).length} products</div></div>
                       <button className="delete-btn" style={{ flex: 'none', padding: '6px 12px' }} onClick={() => handleDeleteCategory(cat)}><Trash2 size={13} /></button>
                     </div>
                   ))}
